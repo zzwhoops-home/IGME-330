@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Greeter</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barriecito&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-size: 1.5em;
+        }
+
+        span {
+            font-size: 18pt;
+        }
+
+        p {
+            font-family: "Barriecito", system-ui;
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        #btn-hello,
+        #btn-goodbye {
+            width: 150px;
+            height: 50px;
+            font-size: 14pt;
+        }
+
+        @media only screen and (min-width: 1024px) {
+            body {
+                background-color: red;
+                padding: 100px;
+            }
+        }
+    </style>
+
+    <script>
+        window.onload = () => {
+            // "pulled" to the top so it is accessible anywhere
+            // greet function
+            const greet = (greeting) => {
+                // handle blanks, otherwise trim and get f & l name
+                const fName = inputFname.value.trim().length
+                    ? inputFname.value.trim()
+                    : "Peter";
+                const lName = inputLname.value.trim().length
+                    ? inputLname.value.trim()
+                    : "Parker";
+
+                const checked = checkboxShoutify.checked;
+
+                // 3C - update HTML of #output <p>
+                let formattedGreeting = `${greeting}, ${fName} ${lName}!`;
+                theOutput.innerText = checked
+                    ? theOutput.innerText = formattedGreeting.toUpperCase()
+                    : theOutput.innerText = formattedGreeting;
+            };
+
+            // 1 - get a reference to the button (s)
+            const helloButton = document.querySelector("#btn-hello");
+            const goodbyeButton = document.querySelector("#btn-goodbye");
+
+            // 2 - add a click event to button that calls a `sayHello` function
+            helloButton.addEventListener("click", () => greet("Hi"));
+            goodbyeButton.addEventListener("click", () => greet("Goodbye"));
+
+            // 3A - get name of person from the <input>
+            const inputFname = document.querySelector("#input-firstname");
+            const inputLname = document.querySelector("#input-lastname");
+            const checkboxShoutify = document.querySelector("#cb-shoutify");
+
+            // 3B - get a reference to the #output <p>
+            const theOutput = document.querySelector("#output");
+
+            // imperatively set styles
+            const theParagraph = document.querySelector("#output");
+            theParagraph.style.backgroundColor = "yellow";
+            theParagraph.style.color = "red";
+        };
+
+    </script>
+</head>
+
+<body>
+    <button id="btn-hello">Say Hi!</button>
+    <button id="btn-goodbye">Say Goodbye!</button>
+    <input type="checkbox" id="cb-shoutify">
+    <span>Shoutify!</span>
+
+    <hr>
+
+    <input id="input-firstname" placeholder="Type in your first name">
+    <input id="input-lastname" placeholder="Type in your last name">
+
+    <p id="output">???</p>
+</body>
+
+</html>
