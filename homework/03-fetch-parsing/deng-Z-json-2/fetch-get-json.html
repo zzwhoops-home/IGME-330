@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <title>Fetch - Load CSV</title>
+    <title>Fetch - Load JSON</title>
     <style>
         body {
             font-family: sans-serif;
@@ -13,7 +13,7 @@
 </head>
 
 <body>
-    <h2>Fetch - Load CSV File</h2>
+    <h2>Fetch - Load JSON File</h2>
     <p>The <code>pet-names.csv</code> file contains popular dog and cat pet names on separate lines, separated by
         commas.</p>
     <p>Note that because fetch is loading a local file, this example will have to be run off a web server rather than
@@ -24,39 +24,32 @@
     <p id="output">Click button to load</p>
 
     <script>
-        const loadCSVFile = () => {
-            fetch('./data/pet-names.csv')
+        const loadJSONFile = () => {
+            fetch('./data/pet-names.json')
                 .then(response => {
                     if (!response.ok) {
                         throw new Error(`HTTP error! status: ${response.status}`);
                     }
-                    return response.text()
+                    return response.json(); // Changed from response.text()!
                 })
-                .then(text => {
-                    console.log('Success:', text);
+                .then(data => {
+                    console.log('Success:', data);
 
-                    // TODO: You implement the parsing and display code here!
-                    // See step-by-step instructions below
-                    // split each line
-                    const lines = text.split("\r\n");
-
-                    console.log(lines);
-
-                    // use .map to split names on each line & destructuring assignment
-                    const [dogNames, catNames] = lines.map(line => line.split(","));
-
-                    console.log(dogNames);
-                    console.log(catNames);
+                    // TODO: Add object destructuring and display code here
+                    const { categories } = data;
+                    const { cats: catNames, dogs: dogNames, birds: birdNames } = categories;
 
                     // Create HTML for dog names
                     const dogListItems = dogNames.map(name => `<li>${name}</li>`);
                     const catListItems = catNames.map(name => `<li>${name}</li>`);
+                    const birdListItems = birdNames.map(name => `<li>${name}</li>`);
 
                     const dogHTML = `<h3>Dog Names</h3><ol>${dogListItems.join("\n")}</ol> `;
                     const catHTML = `<h3>Cat Names</h3><ol>${catListItems.join("\n")}</ol> `;
+                    const birdHTML = `<h3>Bird Names</h3><ol>${birdListItems.join("\n")}</ol> `;
 
                     // Display the HTML on the page
-                    document.querySelector('#output').innerHTML = dogHTML + catHTML;
+                    document.querySelector('#output').innerHTML = dogHTML + catHTML + birdHTML;
                 })
                 .catch(error => {
                     console.error('Error:', error);
@@ -64,7 +57,7 @@
                 });
         };
 
-        document.querySelector('#my-button').addEventListener('click', loadCSVFile);
+        document.querySelector('#my-button').addEventListener('click', loadJSONFile);
     </script>
 </body>
 
