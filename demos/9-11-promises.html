@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        const getHouses = () => fetch("https://anapioficeandfire.com/api/houses")
+        .then(res => {
+            return res.json()
+        })
+        .then(resText => {
+            let lis = resText
+                .map(item => {
+                    const {name, words} = item;
+                    
+                    return  `
+                        <li>
+                            <p>Name: ${name}</p>
+                            <p>Words: ${words || "None"}</p>
+                        </li>`
+                })
+                .join("\n");
+
+            const ol = `
+                <ol>
+                    ${lis}
+                </ol>        
+            `;
+            
+            return ol;
+        });
+
+        // slightly better: refactor into a function once all the data has been structured & formatted
+        const houses = getHouses()
+            .then(housesHTML => document.querySelector("body").innerHTML = housesHTML);
+
+        const delay = (n) => new Promise(resolve => {
+            setTimeout(resolve, n);
+        });
+
+        delay(2000)
+            .then(() => delay(2000))
+            .then(n => 3)
+            .then(n => {
+                console.log(4);
+            })
+    </script>
+</body>
+</html>
