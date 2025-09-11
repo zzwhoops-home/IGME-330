@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <title>Fetch - Load XML</title>
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Fetch - Load XML File</h2>
+    <p>The <code>pet-names.csv</code> file contains popular dog and cat pet names on separate lines, separated by
+        commas.</p>
+    <p>Note that because fetch is loading a local file, this example will have to be run off a web server rather than
+        from your computer's hard drive (e.g. banjo.rit.edu or VSCode's liveserver etc)</p>
+
+    <hr>
+    <button id="my-button">Load Data</button>
+    <p id="output">Click button to load</p>
+
+    <script>
+        const loadXMLFile = () => {
+            fetch('./data/pet-names.xml')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.text(); // Changed back from response.json()!
+                })
+                .then(xmlString => {
+                    console.log('Success:', xmlString);
+
+                    // Create a DOM parser and parse the XML
+                    const parser = new DOMParser();
+                    const xmlDoc = parser.parseFromString(xmlString, 'text/xml');
+
+                    console.log('Parsed XML:', xmlDoc);
+
+                    // TODO: Add guard code and element selection here
+                    // Guard code - check for parser errors
+                    if (xmlDoc.querySelector('parsererror')) {
+                        throw new Error('XML parsing error - check your XML file format');
+                    }
+
+                    console.log('XML parsed successfully');
+
+                    // Get all namelist elements
+                    const namelists = xmlDoc.querySelectorAll('namelist');
+                    console.log('Found namelists:', namelists);
+
+                    // We'll process these in the next step
+                    let dogHTML = '';
+                    let catHTML = '';
+
+                    namelists.forEach(namelist => {
+                        // Get the category ID attribute
+                        const cid = namelist.getAttribute('cid');
+                        console.log('Processing category:', cid);
+
+                        // Get the text content and split into names
+                        const namesText = namelist.textContent;
+                        const names = namesText.split(",");
+
+                        // Create the list HTML
+                        const listHTML = `<ol>${names.map(name => `<li>${name}</li>`).join("")}</ol>`;
+
+                        // Assign to appropriate category
+                        if (cid === 'dognames') {
+                            dogHTML = `<h3>Dog Names</h3>${listHTML}`;
+                        } else if (cid === 'catnames') {
+                            catHTML = `<h3>Cat Names</h3>${listHTML}`;
+                        }
+                    });
+
+                    // Display the results
+                    document.querySelector('#output').innerHTML = dogHTML + catHTML;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.querySelector('#output').innerHTML = `< p > Error loading file: ${error.message}</p >`;
+                });
+        };
+
+        document.querySelector('#my-button').addEventListener('click', loadXMLFile);
+    </script>
+</body>
+
+</html>
