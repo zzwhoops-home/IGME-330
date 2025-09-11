@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        "use strict;"
+        // Any number of params
+        // const multiply = (a, ...rest) => {
+        //     if (rest.length === 0) { return a; }
+
+        //     return a * multiply(rest[0], ...(rest.slice(1)));
+        // }
+
+        const multiply = (a, ...rest) => {
+            let product = a;
+            for (let num of rest) {
+                product *= num;
+            }
+            return product;
+
+            // equivalent
+            // return rest.reduce((x, y) => x * y, a);
+        }
+
+        let a = multiply(32, 32, 32, 32);
+        console.log(a);
+
+        const makePerson = (name, weapon) => {
+            return {
+                name: name,
+                cast: (spell) => {
+                    console.log(`${name} casts ${spell}`);
+                    console.log(`Damage: ${weapon.damage}`);
+                }
+            }
+        }
+
+        const weapon = {
+            damage: 7,
+            element: "metal",
+            name: "Stabbing thingy"
+        }
+
+        const thingOne = makePerson("thing one", weapon);
+        thingOne.cast("thing one's thing caster");
+        
+        const thingTwo = makePerson("thing two", {damage: 15});
+        const thingThree = makePerson("thing three???", {damage: -1});
+
+        const things = [thingOne, thingTwo, thingThree]
+
+        // let str = "";
+        // for (let i = 0; i < things.length; i++) {
+        //     str += things[i].name;
+        //     if (i !== things.length - 1) {
+        //         str += " and "
+        //     }
+        // }
+        // console.log(str)
+
+        const str = things.map((a) => a.name).join(" and ");
+        console.log(str);
+    </script>
+</body>
+</html>
