@@ -1,14 +1,26 @@
 import { getRandomFromArr } from "./utils.js";
 
-// arrays of words
-const words1 = ["Acute", "Aft", "Anti-matter", "Bipolar", "Cargo", "Command", "Communication", "Computer", "Deuterium", "Dorsal", "Emergency", "Engineering", "Environmental", "Flight", "Fore", "Guidance", "Heat", "Impulse", "Increased", "Inertial", "Infinite", "Ionizing", "Isolinear", "Lateral", "Linear", "Matter", "Medical", "Navigational", "Optical", "Optimal", "Optional", "Personal", "Personnel", "Phased", "Reduced", "Science", "Ship's", "Shuttlecraft", "Structural", "Subspace", "Transporter", "Ventral"];
-const words2 = ["Propulsion", "Dissipation", "Sensor", "Improbability", "Buffer", "Graviton", "Replicator", "Matter", "Anti-matter", "Organic", "Power", "Silicon", "Holographic", "Transient", "Integrity", "Plasma", "Fusion", "Control", "Access", "Auto", "Destruct", "Isolinear", "Transwarp", "Energy", "Medical", "Environmental", "Coil", "Impulse", "Warp", "Phaser", "Operating", "Photon", "Deflector", "Integrity", "Control", "Bridge", "Dampening", "Display", "Beam", "Quantum", "Baseline", "Input"];
-const words3 = ["Chamber", "Interface", "Coil", "Polymer", "Biosphere", "Platform", "Thruster", "Deflector", "Replicator", "Tricorder", "Operation", "Array", "Matrix", "Grid", "Sensor", "Mode", "Panel", "Storage", "Conduit", "Pod", "Hatch", "Regulator", "Display", "Inverter", "Spectrum", "Generator", "Cloud", "Field", "Terminal", "Module", "Procedure", "System", "Diagnostic", "Device", "Beam", "Probe", "Bank", "Tie-In", "Facility", "Bay", "Indicator", "Cell"];
+let [words1, words2, words3] = [[], [], []]
 
-// get page elements
-let output = document.querySelector("#output");
-let babbleButton = document.querySelector("#babble");
-let multiBabbleButton = document.querySelector("#multi-babble");
+const loadBabble = () => {
+    // fetch babble words
+    return fetch("./data/babble-data.json")
+        .then(resText => resText.json())
+        // get "words" and then destructure 3 arrays
+        .then(words => {
+            const arrays = words.words;
+            const { "1": one, "2": two, "3": three } = arrays;
+
+            [words1, words2, words3] = [one, two, three]
+        })
+        // add event listeners for buttons
+        .then(() => {
+            babbleButton.addEventListener("click", () => createBabble(1));
+            multiBabbleButton.addEventListener("click", () => createBabble(5));
+        })
+        // load initial displayed babble
+        .then(() => createBabble(1));
+};
 
 // helper function to get and concatenate 3 random words from the arrays
 const getBabble = () => {
@@ -23,6 +35,11 @@ const getBabble = () => {
     return babble;
 };
 
+// get page elements
+let output = document.querySelector("#output");
+let babbleButton = document.querySelector("#babble");
+let multiBabbleButton = document.querySelector("#multi-babble");
+
 const createBabble = (num) => {
     let html = '';
 
@@ -34,9 +51,5 @@ const createBabble = (num) => {
     output.innerHTML = html;
 };
 
-// call initial createBabble function
-createBabble(1);
-
-// add event listener for buttons
-babbleButton.addEventListener("click", () => createBabble(1));
-multiBabbleButton.addEventListener("click", () => createBabble(5));
+// load arrays
+loadBabble();
