@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        canvas {
+            border: 1px solid black;
+        }
+
+        canvas:active {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+<body>
+    <canvas>
+
+    </canvas>
+    
+    <script>
+        const canvas = document.querySelector("canvas");
+        const ctx = canvas.getContext("2d");
+
+        let width = canvas.width = 1000;
+        let height = canvas.height = 600;
+
+        const drawRectangle = (x, y, width, height) => {
+            ctx.fillRect(x, y, width, height);
+            ctx.strokeRect(x, y, width, height);
+        };
+
+        // const translate = (byX, byY, shape) => {
+        //     ctx.save();
+        //     ctx.translate(byX, byY);
+        //     shape();
+        //     ctx.restore();
+        // };
+
+        ctx.lineWidth = 10;
+        ctx.fillStyle = "gray";
+        ctx.strokeStyle = "magenta";
+
+        // translate(100, 100, () => {
+        //     drawRectangle(200, 200);
+        // });
+
+        drawRectangle(0, 0, 200, 200);
+        drawRectangle(50, 50, 100, 100);
+
+        let rectangle = {
+            x: 50, y: 50,
+            width: 100, height: 100,
+            rotation_rad: 0
+        }
+
+        let lastTime = 0;
+        let isPlaying = false;
+        
+        let animationLoop;
+
+        const frame = (timestamp) => {
+            const deltaT = timestamp - lastTime ? timestamp - lastTime : 0;
+            lastTime = timestamp;
+
+            ctx.clearRect(0, 0, width, height);
+
+            let rotationPerSecond = timestamp ? 20 * Math.cos(timestamp / 1000) : 0;
+            rectangle.rotation_rad += rotationPerSecond * (deltaT / 1000);
+
+            ctx.save();
+            
+            ctx.translate(
+                rectangle.x + rectangle.width / 2,
+                rectangle.y + rectangle.height / 2
+            )
+            ctx.rotate(rectangle.rotation_rad);
+
+            ctx.translate(
+                -(rectangle.x + rectangle.width / 2),
+                -(rectangle.y + rectangle.height / 2)
+            )
+
+            drawRectangle(
+                rectangle.x, rectangle.y,
+                rectangle.width, rectangle.height
+            );
+            
+            ctx.restore();
+
+            if (isPlaying) {
+                animationLoop = requestAnimationFrame(frame);
+            }
+        }
+        // console.time('frame')
+        frame();
+
+        canvas.addEventListener('click', (evt) => {
+            isPlaying = !isPlaying;
+
+            if (isPlaying) {
+                frame();
+            }
+            else {
+                cancelAnimationFrame(frame);
+            }
+        })
+    </script>
+</body>
+</html>
