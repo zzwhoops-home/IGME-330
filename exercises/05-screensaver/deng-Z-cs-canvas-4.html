@@ -29,6 +29,7 @@
         let ctx;
 
         let paused = false;
+        let createRectangles = true;
 
         let frameId = 0;
 
@@ -147,28 +148,25 @@
                 if (frameId) {
                     cancelAnimationFrame(frameId);
                 }
-                frameId = requestAnimationFrame(update);
-                drawRandomRect(ctx);
+                if (createRectangles) {
+                    frameId = requestAnimationFrame(update);
+                    drawRandomRect(ctx);
+                }
             }
 
         }
 
         function drawRandomRect(ctx) {
-            ctx.strokeStyle = getRandomColor();
-            ctx.fillStyle = getRandomColor();
-            ctx.lineWidth = getRandomInt(2, 12);
-
-            ctx.beginPath();
-
-            const x = getRandomInt(0, 640)
-            const y = getRandomInt(0, 480)
-            const width = getRandomInt(10, 90)
-            const height = getRandomInt(10, 90);
-
-            ctx.rect(x, y, width, height);
-            ctx.closePath();
-            ctx.fill();
-            ctx.stroke();
+            drawRectangle(
+                ctx = ctx,
+                x = getRandomInt(0, 640),
+                y = getRandomInt(0, 480),
+                width = getRandomInt(10, 90),
+                height = getRandomInt(10, 90),
+                fillStyle = getRandomColor(),
+                lineWidth = getRandomInt(2, 12),
+                strokeStyle = getRandomColor(),
+            );
         }
 
         // event handlers
@@ -177,6 +175,32 @@
             let mouseX = e.clientX - rect.x;
             let mouseY = e.clientY - rect.y;
             console.log(mouseX, mouseY);
+
+            for (let i = 0; i < 10; i++) {
+                let x = getRandomInt(-100, 100) + mouseX;
+                let y = getRandomInt(-100, 100) + mouseY;
+                let width = getRandomInt(20, 50);
+                let height = getRandomInt(20, 50);
+                let color = getRandomColor();
+
+                drawRectangle(ctx, x, y, width, height, color);
+            }
+        }
+
+        // canvas helpers
+        function drawRectangle(ctx, x, y, width, height, fillStyle = "black", lineWidth = 0, strokeStyle = "black") {
+            ctx.save();
+            ctx.fillStyle = fillStyle;
+            ctx.beginPath();
+            ctx.rect(x, y, width, height);
+            ctx.fill();
+            if (lineWidth > 0) {
+                ctx.lineWidth = lineWidth;
+                ctx.strokeStyle = strokeStyle;
+                ctx.stroke();
+            }
+            ctx.closePath();
+            ctx.restore();
         }
 
         function setupUI() {
@@ -185,9 +209,14 @@
                 paused = false;
                 update();
             });
+            document.querySelector("#cbRectangles").addEventListener("click", (e) => {
+                createRectangles = e.target.checked;
+                update();
+            });
 
             canvas.addEventListener("click", canvasClicked);
         }
+
     </script>
 </head>
 
