@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>a</title>
+    <style>
+        canvas {
+            border: 1px solid gray
+        }
+
+        body {
+            font-family: sans-serif;
+        }
+
+        button {
+            font-size: 1.2em;
+        }
+
+        section {
+            margin: .5em 0 .5em 0;
+        }
+    </style>
+    <script>
+        'use strict;'
+
+        let canvas;
+        let ctx;
+
+        let drawing = false;
+
+        window.onload = init;
+
+        function init() {
+            canvas = document.querySelector("canvas");
+            ctx = canvas.getContext("2d");
+
+            // setup UI function
+            setupUI();
+
+            // get data
+            getData();
+
+            let draw = false;
+            if (draw) {
+                fetch("./travis.json")
+                    .then(response => {
+                        return response.json();
+                    })
+                    .then(data => {
+                        const chunkSize = 200;
+    
+                        const butterfly = data;
+    
+                        // let updated = butterfly.map(data => {
+                        //     return [data[0] / 3, data[1] / 3];
+                        // })
+
+                        for (let i = 0; i < butterfly.length - 2000; i++) 
+                        {
+                            // console.log(butterfly[i]);
+                            pushOnline(butterfly[i]);
+                        }
+    
+                        // for (let i = 0; i < updated.length; i += chunkSize) {
+                        //     const chunk = updated.slice(i, i + chunkSize);
+                        //     // console.log(chunk);
+                        //     // pushOnline(chunk);
+                        // }
+                    });
+            }
+        }
+
+        function getData() {
+            let response = fetch("https://mothership.centaur-cod.ts.net/paths", {
+                method: "GET"
+            })
+            .then(response => {
+                return response.json();
+            })
+            .then(data => {
+                data.forEach(point => {
+                    drawPath(ctx, 1, "red", point);
+                });
+            });
+
+            if (response.success) {
+                console.log(`Success: paths: ${response.totalPaths}`);
+            }
+        }
+
+        // event handlers
+        function getMousePos(e) {
+            let rect = e.target.getBoundingClientRect();
+            let mouseX = e.clientX - rect.x;
+            let mouseY = e.clientY - rect.y;
+
+            return [mouseX, mouseY];
+        }
+
+        function drawPath(ctx, lineWidth = 1, strokeStyle = "black", points) {
+            ctx.save();
+
+            ctx.lineWidth = lineWidth;
+            ctx.strokeStyle = strokeStyle;
+
+            const pointOne = points[0];
+            
+            ctx.beginPath();
+            
+            ctx.moveTo(pointOne[0], pointOne[1]);
+
+            points.slice(1).forEach(point => {
+                ctx.lineTo(point[0], point[1]);
+            });
+
+            ctx.stroke();
+
+            ctx.restore();
+        }
+
+        function pushOnline(curPath) {
+            // push to online                
+            let response = fetch("https://mothership.centaur-cod.ts.net/paths", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },
+                body: JSON.stringify([curPath])
+            })
+            .then(response => {
+                return response.json();
+            })
+            .then(data => {
+                // reload page
+                getData();
+                console.log(data);
+            })
+        }
+
+        function setupUI() {
+            let curPath = [];
+
+            canvas.addEventListener("mousedown", (e) => {
+                drawing = true;
+
+                // push to cur path
+                curPath = [getMousePos(e)];
+            });
+
+            canvas.addEventListener("mouseup", (e) => {
+                drawing = false;
+
+                pushOnline(curPath);
+            });
+
+            canvas.addEventListener("mousemove", (e) => {
+                if (!drawing) { return; }
+
+                curPath.push(getMousePos(e));
+
+            });
+
+            canvas.addEventListener("click", getMousePos);
+        }
+    </script>
+</head>
+
+<body>
+    <canvas width="640" height="480">
+        Get a real browser!
+    </canvas>
+
+    <section>
+        <p>Click and drag to spraypaint</p>
+    </section>
+</body>
+
+</html>
