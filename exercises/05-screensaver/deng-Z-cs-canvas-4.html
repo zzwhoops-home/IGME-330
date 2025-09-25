@@ -204,12 +204,12 @@
         }
 
         function setupUI() {
-            document.querySelector("#btnPause").addEventListener("click", () => paused = true);
-            document.querySelector("#btnPlay").addEventListener("click", () => {
+            document.querySelector("#btn-pause").addEventListener("click", () => paused = true);
+            document.querySelector("#btn-play").addEventListener("click", () => {
                 paused = false;
                 update();
             });
-            document.querySelector("#cbRectangles").addEventListener("click", (e) => {
+            document.querySelector("#cb-rectangles").addEventListener("click", (e) => {
                 createRectangles = e.target.checked;
                 update();
             });
@@ -226,13 +226,13 @@
     </canvas>
 
     <section>
-        <button id="btnPlay">Play</button>
-        <button id="btnPause">Pause</button>
+        <button id="btn-play">Play</button>
+        <button id="btn-pause">Pause</button>
     </section>
     <section>
         <span>
-            <input type="checkbox" id="cbRectangles" checked>
-            <label for="cbRectangles">Rectangles</label>
+            <input type="checkbox" id="cb-rectangles" checked>
+            <label for="cb-rectangles">Rectangles</label>
         </span>
     </section>
     <section>
