@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles/default-styles.css">
+    <title>Screensaver</title>
+    <script src="src/main.js" type="module"></script>
+</head>
+
+<body>
+    <canvas width="640" height="480">
+        Get a real browser!
+    </canvas>
+
+    <section>
+        <button id="btn-play">Play</button>
+        <button id="btn-pause">Pause</button>
+        <button id="btn-clear">Clear Screen</button>
+    </section>
+    <section>
+        <span>
+            <input type="checkbox" id="cb-rectangles" checked>
+            <label for="cb-rectangles">Rectangles</label>
+
+            <input type="checkbox" id="cb-arcs" checked>
+            <label for="cb-arcs">Arcs</label>
+
+            <input type="checkbox" id="cb-lines" checked>
+            <label for="cb-lines">Lines</label>
+        </span>
+    </section>
+    <section>
+        <p>Click on the screen to "spraypaint" rectangles (you probably want the screensaver to be paused)</p>
+    </section>
+</body>
+
+</html>
