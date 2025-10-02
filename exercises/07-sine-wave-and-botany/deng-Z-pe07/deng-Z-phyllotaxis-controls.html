@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Sine Start</title>
+    <style>
+        canvas {
+            border: 1px solid black;
+        }
+    </style>
+    <script>
+        "use strict";
+        const canvasWidth = 960, canvasHeight = 600;
+        const FPS = 60;
+        const DEFAULT_C = 4;
+
+        let divergence = 137.5; // drawing angle
+        let c = DEFAULT_C; // constant scaling param
+
+        let divVariance = 0;
+
+        let n = 0;
+
+        let ctx;
+
+        // variables for window
+        let clearButton, restartButton;
+        let cVarInput, divVarInput;
+
+        window.onload = init;
+
+        function init() {
+            ctx = canvas.getContext("2d");
+            canvas.width = canvasWidth;
+            canvas.height = canvasHeight;
+            ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+
+            // get page elements
+            clearButton = document.querySelector("#btn-clear");
+            restartButton = document.querySelector("#btn-restart");
+
+            cVarInput = document.querySelector("#c-variance");
+            divVarInput = document.querySelector("#div-variance");
+
+            // assign event listeners
+            clearButton.addEventListener('click', clear);
+            restartButton.addEventListener('click', restart);
+
+            cVarInput.addEventListener('change', cInputChange);
+            divVarInput.addEventListener('change', divInputChange);
+
+            // default value for c
+            cVarInput.value = DEFAULT_C;
+
+            loop();
+        }
+
+        function loop() {
+            setTimeout(loop, 1000 / FPS);
+
+            // each frame draw a new dot
+            // `a` is the angle
+            // `r` is the radius from the center (e.g. "Pole") of the flower
+            // `c` is the "padding/spacing" between the dots
+            let a = n * dtr(divergence);
+            let r = c * Math.sqrt(n);
+            // console.log(a, r);
+
+            let x = r * Math.cos(a) + canvasWidth / 2;
+            let y = r * Math.sin(a) + canvasHeight / 2;
+            // console.log(x, y);
+
+            divergence = 137.5 + Math.sin(x) * divVariance;
+
+            // finally, draw circle
+            // color -> generation
+            // let color = `rgb(${n % 256},0,255)`;
+
+            // color -> angle
+            // let aDegrees = (n * divergence) % 256;
+            // let color = `rgb(${aDegrees},0,255)`;
+
+            // color (hue) -> quadrant
+            // let aDegrees = (n * divergence) % 361;
+            // let color = `hsl(${aDegrees},100%,50%)`;
+
+            // color (hue) -> generation
+            let color = `hsl(${n / 5 % 361},100%,50%)`;
+
+            drawCircle(ctx, x, y, 2, color);
+
+            n++;
+        }
+
+        // helpers
+        function dtr(degrees) {
+            return degrees * (Math.PI / 180);
+        }
+
+        function drawCircle(ctx, x, y, radius, color) {
+            ctx.save();
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.arc(x, y, radius, 0, Math.PI * 2);
+            ctx.closePath();
+            ctx.fill();
+            ctx.restore();
+        }
+
+        function clear() {
+            ctx.save();
+
+            ctx.fillStyle = "black";
+            ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+
+            ctx.restore();
+        }
+
+        function restart() {
+            // reset values
+            divVariance = 0;
+            c = DEFAULT_C;
+            cVarInput.value = DEFAULT_C;
+            divVarInput.value = 0;
+
+            // reset drawing position
+            n = 0;
+
+            // also clear screen with black
+            clear();
+        }
+
+        function cInputChange() {
+            c = cVarInput.value;
+        }
+
+        function divInputChange() {
+            divVariance = divVarInput.value;
+        }
+    </script>
+</head>
+
+<body>
+    <canvas id="canvas"></canvas>
+
+    <div id="div-div-controls">
+        <label>Divergence Angle Variance</label>
+        <input id="div-variance" type="number" value="0" min="0" max="100" step="0.25">
+    </div>
+    <div id="div-c-controls">
+        <label>C value</label>
+        <input id="c-variance" type="number" value="0" min="0" step="0.1">
+    </div>
+    <div id="div-canvas-controls">
+        <button id="btn-restart">Restart App</button>
+        <button id="btn-clear">Clear Screen</button>
+    </div>
+
+    <div id="explanation">
+        <h2>About this app:</h2>
+        <ul>
+            <li>Divergence variance changes how much the drawing's divergence fluctuates on a sine wave. Essentially,
+                the divergence value is determined by a default <code>137.5 + Math.sin(x) * div_variance</code>.</li>
+            <li>The value of <code>c</code> can be adjusted with the second box. This box increases by 0.1 per arrow
+                click.</li>
+            <li>The "restart app" button will "restart" the app, setting c back to a default 4 and divergence variance
+                to 0. It will also clear the screen.</li>
+            <li>The "clear screen" button will clear the screen.</li>
+            <li>Changes made from starter code</li>
+            <ul>
+                <li>Frame rate increased from 30 to 60 FPS (required)</li>
+                <li>Canvas size increased to 960x600</li>
+                <li>Added divergence variance and c variance.</li>
+            </ul>
+        </ul>
+    </div>
+</body>
+
+</html>
