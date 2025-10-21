@@ -95,6 +95,39 @@ function setupUI(canvasElement) {
         }
     };
 
+    // E - setup and hookup checkboxes
+    const gradientCB = document.querySelector("#gradient-cb");
+    const barsCB = document.querySelector("#bars-cb");
+    const circlesCB = document.querySelector("#circles-cb");
+    const noiseCB = document.querySelector("#noise-cb");
+
+    // everything is checked to start
+    gradientCB.checked = drawParams.showGradient;
+    barsCB.checked = drawParams.showBars;
+    circlesCB.checked = drawParams.showCircles;
+    noiseCB.checked = drawParams.showNoise;
+
+    // add event listeners for everything
+    gradientCB.addEventListener("change", (e) => {
+        drawParams.showGradient = !drawParams.showGradient;
+        gradientCB.checked = drawParams.showGradient;
+    });
+    
+    barsCB.addEventListener("change", (e) => {
+        drawParams.showBars = !drawParams.showBars;
+        barsCB.checked = drawParams.showBars;
+    });
+
+    circlesCB.addEventListener("change", (e) => {
+        drawParams.showCircles = !drawParams.showCircles;
+        circlesCB.checked = drawParams.showCircles;
+    });
+
+    noiseCB.addEventListener("change", (e) => {
+        drawParams.showNoise = !drawParams.showNoise;
+        noiseCB.checked = drawParams.showNoise;
+    });
+
 } // end setupUI
 
 function loop(){
