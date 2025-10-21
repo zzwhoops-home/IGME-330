@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Audio API Demo - Basic</title>
+</head>
+
+<body>
+    <h1>Web Audio API Demo - Basic</h1>
+    <input type="file" id="upload" accept="audio/*">
+    
+    <div>
+        <label for="slider-volume">Volume: <span id="volume-display">50%</span></label>
+        <input id="slider-volume" type="range" min="0" max="100">
+    </div>
+
+    <canvas width="500" height="500"></canvas>
+
+    <table></table>
+
+    <audio controls></audio>
+    <script>
+        const NUM_SAMPLES = 128;
+        
+        let audioCtx = new window.AudioContext();
+        
+        let audioElement = document.querySelector('audio');
+        let sourceNode = audioCtx.createMediaElementSource(audioElement);
+        
+        let analyzerNode = audioCtx.createAnalyser();
+        analyzerNode.fftSize = NUM_SAMPLES;
+        let analyzerData = new Uint8Array(analyzerNode.frequencyBinCount);
+
+        let gainNode = audioCtx.createGain();
+        gainNode.gain.value = 0.5;
+
+        sourceNode.connect(analyzerNode);
+        analyzerNode.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+
+        loop();
+
+        // The input element's ID must be 'upload' to be selected by this handler
+        document.querySelector("#upload").onchange = (e) => {
+            const files = e.target.files;
+            if (files.length > 0) {
+                audioElement.src = URL.createObjectURL(files[0]);
+            }
+        };
+
+        audioElement.addEventListener('play', (e) => {
+            if (audioCtx.state == 'suspended') {
+                audioCtx.resume();
+            }
+        });
+
+        const volumeSlider = document.querySelector("#slider-volume");
+        const volumeDisplay = document.querySelector("#volume-display");
+
+        volumeSlider.addEventListener('input', e => {
+            const newVolume = e.target.value / 100;
+            gainNode.gain.value = newVolume;
+            volumeDisplay.textContent = `${(newVolume * 100).toFixed(0)}%`;
+        });
+
+        function loop() {
+            analyzerNode.getByteFrequencyData(analyzerData);
+
+            draw();
+
+            requestAnimationFrame(loop);
+        }
+
+        function draw() {
+            const canvas = document.querySelector("canvas");
+            const ctx2d = canvas.getContext("2d");
+
+            ctx2d.clearRect(0, 0, 500, 500);
+
+            ctx2d.fillStyle = 'black';
+
+            analyzerData.forEach((num, index) => {
+                let normalized = num * (200 / 255);
+
+                // ctx2d.save();
+                // ctx2d.fillStyle = `rgb(${num} ${255 - num} 0)`;
+                // ctx2d.fillRect(index * 20, 200 - normalized, 20, normalized);
+                // ctx2d.fillRect(index * 20, 200, 20, normalized);
+                // ctx2d.restore();
+                
+                ctx2d.save();
+                ctx2d.strokeStyle = `rgb(${num} ${255 - num} 0)`;
+                ctx2d.fillStyle = `rgb(${num} ${255 - num} 0 / 2%)`;
+                ctx2d.beginPath();
+                ctx2d.arc(250, 250, normalized, 0, Math.PI * 2, false);
+                ctx2d.stroke();
+                ctx2d.fill();
+
+                ctx2d.restore();
+            });
+        }
+    </script>
+</body>
+
+</html>
