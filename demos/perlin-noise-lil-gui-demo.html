@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D Perlin Noise with lil-gui</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 10px;
+      font-size: 28px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #666;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+
+    canvas {
+      display: block;
+      border: 2px solid #333;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .info {
+      margin-top: 15px;
+      padding: 12px;
+      background: #f5f5f5;
+      border-radius: 6px;
+      font-size: 13px;
+      color: #555;
+      line-height: 1.6;
+    }
+
+    .info strong {
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>3D Perlin Noise Animation</h1>
+    <p class="subtitle">
+      Interactive demo using noise3D(x, y, time) with lil-gui controls
+    </p>
+    <canvas id="canvas"></canvas>
+    <div class="info">
+      <strong>What is 3D Perlin Noise?</strong><br>
+      This demo uses noise3D(x, y, t) where x and y are pixel
+      coordinates and t is time. Adjust the scale to zoom in/out, and
+      speed to control how fast the pattern evolves.
+    </div>
+  </div>
+
+
+  <script type="module">
+    import { createNoise3D } from 'https://cdn.jsdelivr.net/npm/simplex-noise@4.0.3/dist/esm/simplex-noise.js';
+    import GUI from 'https://cdn.jsdelivr.net/npm/lil-gui@0.19/+esm';
+
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    const noise3D = createNoise3D();
+
+    const settings = {
+      scale: 256,
+      speed: 0.01,
+      colorMode: 'Color'
+    };
+
+    let t = 0;
+    let imageData;
+    let animationTimeout;
+
+    const initCanvas = () => {
+      canvas.width = 500;
+      canvas.height = 500;
+      imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    };
+
+    const drawNoise = () => {
+      const data = imageData.data;
+      const width = canvas.width;
+      const height = canvas.height;
+
+      for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+          const index = (x + y * width) * 4;
+
+          if (settings.colorMode === 'Grayscale') {
+            const val = noise3D(
+              x / settings.scale,
+              y / settings.scale,
+              t
+            ) * 0.5 + 0.5;
+
+            data[index + 0] = val * 255;
+            data[index + 1] = val * 255;
+            data[index + 2] = val * 255;
+          } else {
+            // const r = noise3D(x / settings.scale, y / settings.scale, t) * 0.5 + 0.5;
+            const r = 0.25;
+            const g = noise3D(x / (settings.scale / 4), y / (settings.scale / 4), t) * 0.5 + 0.6;
+            const b = noise3D(x / (settings.scale / 4), y / (settings.scale / 4), t) * 0.5 + 1.0;
+
+            data[index + 0] = r * 255;
+            data[index + 1] = g * 255;
+            data[index + 2] = b * 255;
+          }
+
+          data[index + 3] = 255;
+        }
+      }
+
+      ctx.putImageData(imageData, 0, 0);
+    };
+
+    const loop = () => {
+      requestAnimationFrame(loop);
+      drawNoise();
+      t += settings.speed;
+    };
+
+    const gui = new GUI({ title: 'Noise Controls' });
+
+    gui.add(settings, 'scale', 2, 25600, 1)
+      .name('Noise Scale');
+
+    gui.add(settings, 'speed', 0, 1, 0.01)
+      .name('Animation Speed');
+
+    gui.add(settings, 'colorMode', ['Grayscale', 'Color'])
+      .name('Color Mode');
+
+    initCanvas();
+    drawNoise();
+    loop();
+  </script>
+</body>
+</html>
