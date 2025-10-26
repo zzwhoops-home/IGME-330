@@ -15,13 +15,16 @@ const drawParams = {
     showGradient: true,
     showBars: true,
     showCircles: true,
-    showNoise: true
+    showNoise: true,
+    timeDomain: false
 };
 
 // 1 - here we are faking an enumeration
 const DEFAULTS = Object.freeze({
     sound1: "media/New Adventure Theme.mp3"
 });
+
+const DEFAULT_FPS = 60;
 
 const init = () => {
     audio.setupWebAudio(DEFAULTS.sound1);
@@ -127,12 +130,14 @@ const setupUI = (canvasElement) => {
     const barsCB = document.querySelector("#bars-cb");
     const circlesCB = document.querySelector("#circles-cb");
     const noiseCB = document.querySelector("#noise-cb");
+    const domainCB = document.querySelector("#domain-type-cb");
 
     // everything is checked to start
     gradientCB.checked = drawParams.showGradient;
     barsCB.checked = drawParams.showBars;
     circlesCB.checked = drawParams.showCircles;
     noiseCB.checked = drawParams.showNoise;
+    domainCB.checked = drawParams.timeDomain;
 
     // add event listeners for everything
     gradientCB.addEventListener("change", (e) => {
@@ -155,11 +160,18 @@ const setupUI = (canvasElement) => {
         noiseCB.checked = drawParams.showNoise;
     });
 
+    domainCB.addEventListener("change", (e) => {
+        drawParams.timeDomain = !drawParams.timeDomain;
+        domainCB.checkced = drawParams.timeDomain;
+    });
+
 } // end setupUI
 
 const loop = () => {
-    /* NOTE: This is temporary testing code that we will delete in Part II */
-    requestAnimationFrame(loop);
+    // run at 60 FPS always
+    setTimeout(() => {
+        loop();
+    }, 1000 / DEFAULT_FPS);
 
     canvas.draw(drawParams);
 }
