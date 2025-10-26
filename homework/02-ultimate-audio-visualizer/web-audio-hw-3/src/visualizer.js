@@ -1,10 +1,10 @@
 /*
-	The purpose of this file is to take in the analyser node and a <canvas> element: 
-	  - the module will create a drawing context that points at the <canvas> 
-	  - it will store the reference to the analyser node
-	  - in draw(), it will loop through the data in the analyser node
-	  - and then draw something representative on the canvas
-	  - maybe a better name for this file/module would be *visualizer.js* ?
+    The purpose of this file is to take in the analyser node and a <canvas> element: 
+      - the module will create a drawing context that points at the <canvas> 
+      - it will store the reference to the analyser node
+      - in draw(), it will loop through the data in the analyser node
+      - and then draw something representative on the canvas
+      - maybe a better name for this file/module would be *visualizer.js* ?
 */
 
 import * as utils from './utils.js';
@@ -12,35 +12,35 @@ import * as utils from './utils.js';
 let ctx, canvasWidth, canvasHeight, gradient, analyserNode, audioData;
 
 
-const setupCanvas = (canvasElement,analyserNodeRef) => {
-	// create drawing context
-	ctx = canvasElement.getContext("2d");
-	canvasWidth = canvasElement.width;
-	canvasHeight = canvasElement.height;
-	// create a gradient that runs top to bottom
-	gradient = utils.getLinearGradient(ctx, 0, 0, 0, canvasHeight,[{percent:0,color:"#42047E"},{percent:1,color:"#07F49E"}]);
-	// keep a reference to the analyser node
-	analyserNode = analyserNodeRef;
-	// this is the array where the analyser data will be stored
-	audioData = new Uint8Array(analyserNode.fftSize / 2);
+const setupCanvas = (canvasElement, analyserNodeRef) => {
+    // create drawing context
+    ctx = canvasElement.getContext("2d");
+    canvasWidth = canvasElement.width;
+    canvasHeight = canvasElement.height;
+    // create a gradient that runs top to bottom
+    gradient = utils.getLinearGradient(ctx, 0, 0, 0, canvasHeight, [{ percent: 0, color: "#42047E" }, { percent: 1, color: "#07F49E" }]);
+    // keep a reference to the analyser node
+    analyserNode = analyserNodeRef;
+    // this is the array where the analyser data will be stored
+    audioData = new Uint8Array(analyserNode.fftSize / 2);
 }
 
-const draw = (params={}) => {
-  // 1 - populate the audioData array with the frequency data from the analyserNode
-	// notice these arrays are passed "by reference" 
-	analyserNode.getByteFrequencyData(audioData);
+const draw = (params = {}) => {
+    // 1 - populate the audioData array with the frequency data from the analyserNode
+    // notice these arrays are passed "by reference" 
+    analyserNode.getByteFrequencyData(audioData);
 
-	// OR
-	//analyserNode.getByteTimeDomainData(audioData); // waveform data
-	
-	// 2 - draw background
-	ctx.save();
+    // OR
+    //analyserNode.getByteTimeDomainData(audioData); // waveform data
+
+    // 2 - draw background
+    ctx.save();
     ctx.fillStyle = "black";
     ctx.globalAlpha = 0.1;
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
     ctx.restore();
-		
-	// 3 - draw gradient
+
+    // 3 - draw gradient
     if (params.showGradient) {
         ctx.save();
         ctx.fillStyle = gradient;
@@ -48,8 +48,8 @@ const draw = (params={}) => {
         ctx.fillRect(0, 0, canvasWidth, canvasHeight);
         ctx.restore();
     }
-	
-	// 4 - draw bars
+
+    // 4 - draw bars
     if (params.showBars) {
         let barSpacing = 4;
         let margin = 5;
@@ -68,8 +68,8 @@ const draw = (params={}) => {
         });
         ctx.restore();
     }
-	
-	// 5 - draw circles
+
+    // 5 - draw circles
     if (params.showCircles) {
         let maxRadius = canvasHeight / 4;
         ctx.save();
@@ -82,7 +82,7 @@ const draw = (params={}) => {
             let circleRadius = percent * maxRadius;
             ctx.beginPath();
             ctx.fillStyle = utils.makeColor(255, 111, 111, 0.34 - percent / 3.0);
-            ctx.arc(canvasWidth / 2, canvasHeight / 2, circleRadius, 0, 2 * Math.PI , false);
+            ctx.arc(canvasWidth / 2, canvasHeight / 2, circleRadius, 0, 2 * Math.PI, false);
             ctx.fill();
             ctx.closePath();
 
@@ -105,7 +105,7 @@ const draw = (params={}) => {
 
         ctx.restore();
     }
-		
+
 }
 
 export { setupCanvas, draw };

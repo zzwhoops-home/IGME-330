@@ -13,7 +13,7 @@ import * as canvas from './visualizer.js';
 
 const drawParams = {
     showGradient: true,
-    showBars : true,
+    showBars: true,
     showCircles: true,
     showNoise: true
 };
@@ -23,7 +23,7 @@ const DEFAULTS = Object.freeze({
     sound1: "media/New Adventure Theme.mp3"
 });
 
-function init() {
+const init = () => {
     audio.setupWebAudio(DEFAULTS.sound1);
 
     console.log("init called");
@@ -36,7 +36,7 @@ function init() {
     loop();
 }
 
-function setupUI(canvasElement) {
+const setupUI = (canvasElement) => {
     // A - hookup fullscreen button
     const fsButton = document.querySelector("#fs-button");
 
@@ -112,7 +112,7 @@ function setupUI(canvasElement) {
         drawParams.showGradient = !drawParams.showGradient;
         gradientCB.checked = drawParams.showGradient;
     });
-    
+
     barsCB.addEventListener("change", (e) => {
         drawParams.showBars = !drawParams.showBars;
         barsCB.checked = drawParams.showBars;
@@ -130,9 +130,9 @@ function setupUI(canvasElement) {
 
 } // end setupUI
 
-function loop(){
-/* NOTE: This is temporary testing code that we will delete in Part II */
-	requestAnimationFrame(loop);
+const loop = () => {
+    /* NOTE: This is temporary testing code that we will delete in Part II */
+    requestAnimationFrame(loop);
 
     canvas.draw(drawParams);
 }
