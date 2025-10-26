@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HW 2 documentation</title>
+</head>
+
+<body>
+    <header>
+        <h1>Homework 2 - Ultimate Audio Visualizer Docs</h1>
+        <p>Zachary Deng - Fall 2025</p>
+    </header>
+
+    <section>
+        <h2>I. 2 Audio Effect nodes</h2>
+        <p>I added a <code>StereoPannerNode</code> and a <code>WaveShaperNode</code>, which I read online can do
+            panning left and right and apply a distortion effect, respectively. Both are additional sliders, with the
+            panner going between [-1, 1] and the WaveShaper having a custom <code>makeDistortionCurve(amount)</code>
+            function which I found on <a
+                href="https://developer.mozilla.org/en-US/docs/Web/API/StereoPannerNode/StereoPannerNode">mdn</a>. All I
+            know is that this creates an array of floats which tell the <code>WaveShaperNode</code> how to alter the
+            waveform, which in this case produces a distortion effect.</p>
+    </section>
+
+    <section>
+        <h2>II. Sprite</h2>
+    </section>
+
+    <section>
+        <h2>III. JSON app data</h2>
+    </section>
+
+    <section>
+        <h2>IV. Aesthetic improvements</h2>
+    </section>
+</body>
+
+</html>

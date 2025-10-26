@@ -84,6 +84,33 @@ const setupUI = (canvasElement) => {
     // set value of label to match initial value of slider
     volumeSlider.dispatchEvent(new Event("input"));
 
+    // setup sliders for distortion and pan
+    let distortionSlider = document.querySelector("#distortion-slider");
+    let distortionLabel = document.querySelector("#distortion-label");
+
+    distortionSlider.oninput = e => {
+        // set distortion
+        audio.setDistortion(e.target.value);
+        // update label
+        distortionLabel.innerHTML = Math.round(e.target.value);
+    };
+
+    // initial value
+    distortionSlider.dispatchEvent(new Event("input"));
+
+    let panSlider = document.querySelector("#pan-slider");
+    let panLabel = document.querySelector("#pan-label");
+
+    panSlider.oninput = e => {
+        // set pan
+        audio.setPan(e.target.value);
+        // update label
+        panLabel.innerHTML = e.target.value;
+    };
+
+    // initial value
+    panSlider.dispatchEvent(new Event("input"));
+
     // D - hookup track <select>
     let trackSelect = document.querySelector("#track-select");
     // add .onchange event to <select>

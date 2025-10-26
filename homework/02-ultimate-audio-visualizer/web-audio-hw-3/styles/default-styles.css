@@ -21,6 +21,8 @@ canvas {
 
 section {
     margin-bottom: 1rem;
+    display: flex;
+    gap: 10px;
 }
 
 #playButton {
