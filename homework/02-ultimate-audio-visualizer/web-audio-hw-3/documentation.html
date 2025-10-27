@@ -5,54 +5,98 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HW 2 documentation</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            width: 960px;
+            margin: 0 auto;
+            color: white;
+            background-color: #160a4e;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        a {
+            color: #7acaff;
+            /* Dark gray for all links */
+            text-decoration: none;
+            /* Removes the underline */
+        }
+
+        a:hover {
+            color: #5cffff;
+            /* Slightly lighter gray on hover */
+            text-decoration: underline;
+            /* Adds the underline back on hover */
+        }
+
+        main {
+            margin: 2rem;
+        }
+    </style>
 </head>
 
 <body>
-    <header>
-        <h1>Homework 2 - Ultimate Audio Visualizer Docs</h1>
-        <p>Zachary Deng - Fall 2025</p>
-    </header>
+    <main>
+        <header>
+            <h1>Homework 2 - Ultimate Audio Visualizer Docs</h1>
+            <p>Zachary Deng - Fall 2025</p>
+        </header>
 
-    <section>
-        <h2>I. 2 Audio Effect nodes</h2>
-        <p>I added a <code>StereoPannerNode</code> and a <code>WaveShaperNode</code>, which I read online can do
-            panning left and right and apply a distortion effect, respectively. Both are additional sliders, with the
-            panner going between [-1, 1] and the WaveShaper having a custom <code>makeDistortionCurve(amount)</code>
-            function which I found on <a
-                href="https://developer.mozilla.org/en-US/docs/Web/API/StereoPannerNode/StereoPannerNode">mdn</a>. All I
-            know is that this creates an array of floats which tell the <code>WaveShaperNode</code> how to alter the
-            waveform, which in this case produces a distortion effect.</p>
-    </section>
+        <section>
+            <h2>I. 2 Audio Effect nodes</h2>
+            <p>I added a <code>StereoPannerNode</code> and a <code>WaveShaperNode</code>, which I read online can do
+                panning left and right and apply a distortion effect, respectively. Both are additional sliders, with
+                the
+                panner going between [-1, 1] and the WaveShaper having a custom <code>makeDistortionCurve(amount)</code>
+                function which I found on <a
+                    href="https://developer.mozilla.org/en-US/docs/Web/API/StereoPannerNode/StereoPannerNode">mdn</a>.
+                All I
+                know is that this creates an array of floats which tell the <code>WaveShaperNode</code> how to alter the
+                waveform, which in this case produces a distortion effect.</p>
+        </section>
 
-    <section>
-        <h2>II. Sprite</h2>
-        <p>My <code>TeslaSprite</code> class is located within <code>src/sprite.js</code>, and I made an animation that
-            should be reminiscent of a Tesla coil. While it does not arc to anything on screen, there are several things
-            which are affected by the average volume. The average volume is determined by two parameters,
-            <code>dataStart</code> and <code>dataEnd</code>. The <code>audioData</code> is sliced between these values,
-            0 being the beginning of the data and 1 being the end, and its values are averaged. These attributes of the
-            "Tesla coil" are affected:
-        </p>
-        <ul>
-            <li>Radius of arcs - how far the arcs travel, affected by volume</li>
-            <li>Radius variance - how much the arc travel distance varies, affected by volume</li>
-            <li>Number of arcs, affected by volume</li>
-            <li>Segment jitter - how jagged the lightning is, affected by # of data points </li>
-            <li>y-distance - this will act as if it is "traveling" with the rectangles behind</li>
-            <li>Alpha value of lines - a smaller value will make the lines fade out more</li>
-        </ul>
-        <p>By default, I have placed two coils, one on each side. The left coil corresponds to the lower frequencies
-            between 0 and 0.5, and the right coil corresponds to the higher frequencies between 0.5 and 1.0. However, if
-            you use the "Coil Slider", you can change the data range that is averaged.</p>
-    </section>
+        <section>
+            <h2>II. Sprite</h2>
+            <p>My <code>TeslaSprite</code> class is located within <code>src/sprite.js</code>, and I made an animation
+                that
+                should be reminiscent of a Tesla coil. While it does not arc to anything on screen, there are several
+                things
+                which are affected by the average volume. The average volume is determined by two parameters,
+                <code>dataStart</code> and <code>dataEnd</code>. The <code>audioData</code> is sliced between these
+                values,
+                0 being the beginning of the data and 1 being the end, and its values are averaged. These attributes of
+                the
+                "Tesla coil" are affected:
+            </p>
+            <ul>
+                <li>Radius of arcs - how far the arcs travel, affected by volume</li>
+                <li>Radius variance - how much the arc travel distance varies, affected by volume</li>
+                <li>Number of arcs, affected by volume</li>
+                <li>Segment jitter - how jagged the lightning is, affected by # of data points </li>
+                <li>y-distance - this will act as if it is "traveling" with the rectangles behind</li>
+                <li>Alpha value of lines - a smaller value will make the lines fade out more</li>
+            </ul>
+            <p>By default, I have placed two coils, one on each side. The left coil corresponds to the lower frequencies
+                between 0 and 0.5, and the right coil corresponds to the higher frequencies between 0.5 and 1.0.
+                However, if
+                you use the "Coil Slider", you can change the data range that is averaged.</p>
+        </section>
 
-    <section>
-        <h2>III. JSON app data</h2>
-    </section>
+        <section>
+            <h2>III. JSON app data</h2>
+            <p>I added three things in my JSON:</p>
+            <ul>
+                <li>The title of the page</li>
+                <li>A brief introduction and instructions on how to use the page</li>
+                <li>Filepaths and metadata for each song; 'metadata' includes just the title</li>
+            </ul>
+        </section>
 
-    <section>
-        <h2>IV. Aesthetic improvements</h2>
-    </section>
+        <section>
+            <h2>IV. Aesthetic improvements</h2>
+        </section>
+    </main>
 </body>
 
 </html>
