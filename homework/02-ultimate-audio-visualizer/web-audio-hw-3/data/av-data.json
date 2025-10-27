@@ -3,6 +3,24 @@
     "instructions": "Click on the Play button to play the selected track. Use the checkboxes or sliders to alter how the music sounds. I recommend turning distortion all the way up. The 'Coil Ranges' slider adjusts the Tesla-coil like objects on screen. Try it!",
     "audio_files": [
         {
+            "filepath": "media/Blessing Song.mp3",
+            "metadata": {
+                "title": "Blessing Song - Soma Trio"
+            }
+        },
+        {
+            "filepath": "media/No More Night.mp3",
+            "metadata": {
+                "title": "No More Night - David Phelps"
+            }
+        },
+        {
+            "filepath": "media/Miracles.mp3",
+            "metadata": {
+                "title": "Miracles - Colton Dixon"
+            }
+        },
+        {
             "filepath": "media/New Adventure Theme.mp3",
             "metadata": {
                 "title": "New Adventure Theme"
