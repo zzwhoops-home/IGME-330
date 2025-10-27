@@ -29,9 +29,6 @@ class TeslaSprite {
         this.radiusVariance = audioAvg;
         this.arcs = Math.round(audioAvg / 30);
         this.segmentJitter = (1.3 - (this.dataEnd - this.dataStart)) * 8;
-
-        // animate the lightning with the music
-        this.y = 400 - audioAvg;
     }
 
     updateX(newX) {

@@ -11,11 +11,11 @@ import * as utils from './utils.js';
 import { TeslaSprite } from './tesla-sprite.js';
 import { BGCircle } from './bg-circle.js'
 
-let ctx, ctxBG, canvasWidth, canvasHeight, gradient, analyserNode, audioData;
+let ctx, ctxBG, canvasWidth, canvasHeight, analyserNode, audioData;
 
 let teslaSprites = [];
 
-const TESLA_COLORS = ["rgba(128, 255, 44, 1)", "rgba(233, 156, 73, 1)"];
+const TESLA_COLORS = ["rgba(144, 255, 70, 1)", "rgba(255, 171, 81, 1)"];
 const CIRCLE_COLORS = ["rgba(58, 99, 166, 1)", "rgba(88, 66, 184, 1)", "rgba(40, 121, 91, 1)"];
 
 let circles = [];
@@ -26,8 +26,6 @@ const setupCanvas = (canvasElement, analyserNodeRef) => {
     ctx = canvasElement.getContext("2d");
     canvasWidth = canvasElement.width;
     canvasHeight = canvasElement.height;
-    // create a gradient that runs top to bottom
-    gradient = utils.getLinearGradient(ctx, 0, 0, 0, canvasHeight, [{ percent: 0, color: "#42047E" }, { percent: 1, color: "#0c6242ff" }]);
     // keep a reference to the analyser node
     analyserNode = analyserNodeRef;
     // this is the array where the analyser data will be stored
@@ -114,9 +112,9 @@ const draw = (params = {}) => {
     ctx.restore();
 
     // 3 - draw gradient
+    ctxBG.fillStyle = "#4b2386ff";
+    ctxBG.fillRect(0, 0, canvasWidth, canvasHeight);
     if (params.showGradient) {
-        ctxBG.fillStyle = "#4b2386ff";
-        ctxBG.fillRect(0, 0, canvasWidth, canvasHeight);
 
         circles.forEach(circle => {
             circle.update();
@@ -136,8 +134,6 @@ const draw = (params = {}) => {
         let margin = 5;
         let screenWidthForBars = canvasWidth - (audioData.length * barSpacing) - margin * 2;
         let barWidth = screenWidthForBars / audioData.length;
-        let barHeight = 200;
-        let topSpacing = 100;
 
         const middleIndex = middle * audioData.length;
 
@@ -151,12 +147,74 @@ const draw = (params = {}) => {
         ctx.save();
         ctx.globalAlpha = 0.5;
 
-        // loop through the data and draw
-        audioData.forEach((element, i) => {
-            ctx.fillStyle = i < middleIndex ? TESLA_COLORS[0] : TESLA_COLORS[1];
+        ctx.beginPath();
 
-            ctx.fillRect(margin + i * (barWidth + barSpacing), canvasHeight / 2 - (element / 2), barWidth, element);
-        });
+        let coords = [];
+
+        // draw top part with quadratic curves
+        ctx.moveTo(margin, canvasHeight / 2 - (audioData[0] / 2));
+        for (let i = 0; i < audioData.length; i++) {
+            let x = margin + i * (barWidth + barSpacing);
+            let y = canvasHeight / 2 - (audioData[i] / 2);
+
+            // add coordinates to draw mirrored image
+            coords.push([x, canvasHeight / 2 + (audioData[i] / 2)]);
+
+            if (i < audioData.length - 1) {
+                let nextX = margin + (i + 1) * (barWidth + barSpacing);
+                let nextY = canvasHeight / 2 - (audioData[i + 1] / 2);
+
+                if (i === 0) {
+                    ctx.lineTo(x, y);
+                }
+
+                // use the midpoint as the control point, interpolating smoothly
+                let midX = (nextX + x) / 2;
+                let midY = (nextY + y) / 2;
+
+                ctx.quadraticCurveTo(x, y, midX, midY);
+            }
+            else {
+                // line to the last point
+                ctx.lineTo(x, y);
+            }
+        }
+
+        // draw bottom part, mirrored to be symmetric
+        for (let i = coords.length - 1; i > 0; i--) {
+            let x = coords[i][0];
+            let y = coords[i][1];
+
+            if (i < audioData.length - 1) {
+                let nextX = coords[i - 1][0];
+                let nextY = coords[i - 1][1];
+
+                if (i === 0) {
+                    ctx.lineTo(x, y);
+                }
+
+                let midX = (nextX + x) / 2;
+                let midY = (nextY + y) / 2;
+
+                ctx.quadraticCurveTo(x, y, midX, midY);
+            }
+            else {
+                // line to the last point
+                ctx.lineTo(x, y);
+            }
+        }
+
+        ctx.closePath();
+
+        let gradient = utils.getLinearGradient(ctx, 0, 0, canvasWidth, 0, [
+            { percent: 0, color: TESLA_COLORS[0] },
+            { percent: +middle - 0.05 < 0.01 ? 0 : +middle - 0.05, color: TESLA_COLORS[0] },
+            { percent: +middle + 0.05 > 0.99 ? 0.99 : +middle + 0.05, color: TESLA_COLORS[1] },
+            { percent: middle, color: TESLA_COLORS[1] }
+        ], 0);
+        ctx.fillStyle = gradient;
+        ctx.fill();
+
         ctx.restore();
     }
 
@@ -197,10 +255,12 @@ const draw = (params = {}) => {
         ctx.restore();
     }
 
-    teslaSprites.forEach(sprite => {
-        sprite.update(audioData);
-        sprite.draw(ctx);
-    })
+    if (params.showTeslas) {
+        teslaSprites.forEach(sprite => {
+            sprite.update(audioData);
+            sprite.draw(ctx);
+        })
+    }
 }
 
 export { setupCanvas, draw };

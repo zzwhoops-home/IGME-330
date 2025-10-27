@@ -15,7 +15,7 @@ const drawParams = {
     showGradient: true,
     showBars: true,
     showCircles: true,
-    showNoise: true,
+    showTeslas: true,
     timeDomain: false,
     coilCenter: 0.5
 };
@@ -177,14 +177,14 @@ const setupUI = (canvasElement) => {
     const gradientCB = document.querySelector("#gradient-cb");
     const barsCB = document.querySelector("#bars-cb");
     const circlesCB = document.querySelector("#circles-cb");
-    const noiseCB = document.querySelector("#noise-cb");
+    const teslaCB = document.querySelector("#tesla-cb");
     const domainCB = document.querySelector("#domain-type-cb");
 
     // everything is checked to start
     gradientCB.checked = drawParams.showGradient;
     barsCB.checked = drawParams.showBars;
     circlesCB.checked = drawParams.showCircles;
-    noiseCB.checked = drawParams.showNoise;
+    teslaCB.checked = drawParams.showTeslas;
     domainCB.checked = drawParams.timeDomain;
 
     // add event listeners for everything
@@ -203,9 +203,9 @@ const setupUI = (canvasElement) => {
         circlesCB.checked = drawParams.showCircles;
     });
 
-    noiseCB.addEventListener("change", (e) => {
-        drawParams.showNoise = !drawParams.showNoise;
-        noiseCB.checked = drawParams.showNoise;
+    teslaCB.addEventListener("change", (e) => {
+        drawParams.showTeslas = !drawParams.showTeslas;
+        teslaCB.checked = drawParams.showTeslas;
     });
 
     domainCB.addEventListener("change", (e) => {
