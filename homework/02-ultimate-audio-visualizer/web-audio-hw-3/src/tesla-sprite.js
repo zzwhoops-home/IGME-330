@@ -1,3 +1,5 @@
+import { getRandom } from "./utils.js"
+
 class TeslaSprite {
     constructor({ x, y, color, radius, radiusVariance, arcs, segments, segmentJitter, lineWidth, dataStart, dataEnd }) {
         this.x = x;
@@ -69,13 +71,13 @@ class TeslaSprite {
 
     randomVec() {
         // get random direction, multiplied by radius with jitter
-        let radius = this.radius + getRandomFloat(-this.radiusVariance, this.radiusVariance);
+        let radius = this.radius + getRandom(-this.radiusVariance, this.radiusVariance);
         // clamp to 0
         if (radius < 0) {
             radius = 0;
         }
 
-        const angle = getRandomFloat(0, Math.PI * 2);
+        const angle = getRandom(0, Math.PI * 2);
 
         const x = Math.cos(angle) * radius;
         const y = Math.sin(angle) * radius;
@@ -104,12 +106,8 @@ class Vector2 {
     }
 
     addNoise(value) {
-        return new Vector2(this.x + getRandomFloat(-value, value), this.y + getRandomFloat(-value, value));
+        return new Vector2(this.x + getRandom(-value, value), this.y + getRandom(-value, value));
     }
-}
-
-const getRandomFloat = (min, max) => {
-    return Math.random() * (max - min) + min;
 }
 
 export { TeslaSprite };

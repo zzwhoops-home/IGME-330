@@ -8,13 +8,18 @@
 */
 
 import * as utils from './utils.js';
-import { TeslaSprite } from './sprite.js';
+import { TeslaSprite } from './tesla-sprite.js';
+import { BGCircle } from './bg-circle.js'
 
-let ctx, canvasWidth, canvasHeight, gradient, analyserNode, audioData;
+let ctx, ctxBG, canvasWidth, canvasHeight, gradient, analyserNode, audioData;
 
 let teslaSprites = [];
 
 const TESLA_COLORS = ["#80ff2cff", "#e99c49ff"];
+const CIRCLE_COLORS = ["#3a63a6ff", "#5842b8ff", "#28795bff"];
+
+let circles = [];
+const NUM_CIRCLES = 20;
 
 const setupCanvas = (canvasElement, analyserNodeRef) => {
     // create drawing context
@@ -22,11 +27,14 @@ const setupCanvas = (canvasElement, analyserNodeRef) => {
     canvasWidth = canvasElement.width;
     canvasHeight = canvasElement.height;
     // create a gradient that runs top to bottom
-    gradient = utils.getLinearGradient(ctx, 0, 0, 0, canvasHeight, [{ percent: 0, color: "#42047E" }, { percent: 1, color: "#07F49E" }]);
+    gradient = utils.getLinearGradient(ctx, 0, 0, 0, canvasHeight, [{ percent: 0, color: "#42047E" }, { percent: 1, color: "#0c6242ff" }]);
     // keep a reference to the analyser node
     analyserNode = analyserNodeRef;
     // this is the array where the analyser data will be stored
     audioData = new Uint8Array(analyserNode.fftSize / 2);
+
+    // get drawing context for BG
+    ctxBG = document.querySelector("#bg-canvas").getContext("2d");
 
     // create tesla sprites
     teslaSprites.push(
@@ -57,6 +65,28 @@ const setupCanvas = (canvasElement, analyserNodeRef) => {
             dataEnd: 1.0
         })
     );
+
+    for (let i = 0; i < NUM_CIRCLES; i++) {
+        const radius = utils.getRandom(canvasWidth / 15, canvasWidth / 5);
+
+        const x = utils.getRandom(radius, canvasWidth - radius);
+        const y = utils.getRandom(radius, canvasHeight - radius);
+        const dx = utils.getRandom(-canvasWidth / 3000, canvasWidth / 3000);
+        const dy = utils.getRandom(-canvasHeight / 3000, canvasHeight / 3000);
+
+        circles.push(new BGCircle(
+            {
+                x: x,
+                y: y,
+                radius: radius,
+                dx: dx,
+                dy: dy,
+                canvasWidth: canvasWidth,
+                canvasHeight: canvasHeight,
+                color: CIRCLE_COLORS[Math.floor(Math.random() * CIRCLE_COLORS.length)]
+            }
+        ))
+    }
 }
 
 const draw = (params = {}) => {
@@ -78,19 +108,24 @@ const draw = (params = {}) => {
     teslaSprites[1].dataStart = middle;
 
     // 2 - draw background
-    ctx.save();
-    ctx.fillStyle = "black";
-    ctx.globalAlpha = 0.1;
-    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-    ctx.restore();
+    // ctx.save();
+    // ctx.fillStyle = "black";
+    // ctx.globalAlpha = 0.1;
+    // ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+    // ctx.restore();
 
     // 3 - draw gradient
     if (params.showGradient) {
-        ctx.save();
-        ctx.fillStyle = gradient;
-        ctx.globalAlpha = 0.3;
-        ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-        ctx.restore();
+        circles.forEach(circle => {
+            circle.update();
+            circle.draw(ctxBG);
+        })
+
+        // ctx.save();
+        // ctx.fillStyle = gradient;
+        // ctx.globalAlpha = 0.3;
+        // ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+        // ctx.restore();
     }
 
     // 4 - draw bars
