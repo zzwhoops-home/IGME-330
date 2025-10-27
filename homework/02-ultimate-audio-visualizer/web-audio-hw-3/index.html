@@ -10,7 +10,11 @@
 
 <body>
     <main>
-        <canvas width="800" height="400"></canvas>
+        <h1 id="title"></h1>
+        <p id="instructions"></p>
+        <div id="canvas">
+            <canvas width="800" height="400"></canvas>
+        </div>
         <div id="controls">
             <section>
                 <button id="play-button" data-playing="no"></button>
@@ -34,6 +38,11 @@
 
                 Distortion: <input type="range" id="distortion-slider" min="0" max="100" value="0" step="1">
                 <span id="distortion-label">???</span>
+            </section>
+
+            <section>
+                Coil Ranges: <input type="range" id="coil-slider" min="0.01" max="0.99" value="0.5" step="0.01">
+                <span id="coil-label">???</span>
             </section>
         </div>
         <section>

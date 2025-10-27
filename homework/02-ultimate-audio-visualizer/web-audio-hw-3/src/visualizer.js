@@ -8,9 +8,11 @@
 */
 
 import * as utils from './utils.js';
+import { TeslaSprite } from './sprite.js';
 
 let ctx, canvasWidth, canvasHeight, gradient, analyserNode, audioData;
 
+let teslaSprites = [];
 
 const setupCanvas = (canvasElement, analyserNodeRef) => {
     // create drawing context
@@ -23,6 +25,36 @@ const setupCanvas = (canvasElement, analyserNodeRef) => {
     analyserNode = analyserNodeRef;
     // this is the array where the analyser data will be stored
     audioData = new Uint8Array(analyserNode.fftSize / 2);
+
+    // create tesla sprites
+    teslaSprites.push(
+        new TeslaSprite({
+            x: 200,
+            y: 200,
+            color: "#80ff2cff",
+            radius: 200,
+            radiusVariance: 100,
+            arcs: 10,
+            segments: 20,
+            segmentJitter: 5,
+            lineWidth: 1,
+            dataStart: 0.0,
+            dataEnd: 0.5
+        }),
+        new TeslaSprite({
+            x: 600,
+            y: 200,
+            color: "#e99c49ff",
+            radius: 200,
+            radiusVariance: 100,
+            arcs: 10,
+            segments: 20,
+            segmentJitter: 5,
+            lineWidth: 1,
+            dataStart: 0.5,
+            dataEnd: 1.0
+        })
+    );
 }
 
 const draw = (params = {}) => {
@@ -36,8 +68,12 @@ const draw = (params = {}) => {
         analyserNode.getByteFrequencyData(audioData);
     }
 
-    // OR
-    //analyserNode.getByteTimeDomainData(audioData); // waveform data
+    // get coil slider middle
+    let middle = params.coilCenter;
+
+    // update ranges
+    teslaSprites[0].dataEnd = middle;
+    teslaSprites[1].dataStart = middle;
 
     // 2 - draw background
     ctx.save();
@@ -112,6 +148,10 @@ const draw = (params = {}) => {
         ctx.restore();
     }
 
+    teslaSprites.forEach(sprite => {
+        sprite.update(audioData);
+        sprite.draw(ctx);
+    })
 }
 
 export { setupCanvas, draw };

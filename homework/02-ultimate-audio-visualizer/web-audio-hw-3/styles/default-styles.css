@@ -1,12 +1,24 @@
 body {
-    background: #eeeeee;
+    display: flex;
+    justify-content: center;
+    background: #141965;
     font-family: tahoma, verdana, sans serif;
 }
 
+main {
+    width: 960px;
+    padding: 2rem;
+    background: #ddd;
+}
+
+#canvas {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
 canvas {
-    margin-left: 1rem;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
+    margin: 0 1rem 1.5rem 1rem;
     box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5);
     background: #fafafa;
 }

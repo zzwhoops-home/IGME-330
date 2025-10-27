@@ -16,7 +16,8 @@ const drawParams = {
     showBars: true,
     showCircles: true,
     showNoise: true,
-    timeDomain: false
+    timeDomain: false,
+    coilCenter: 0.5
 };
 
 // 1 - here we are faking an enumeration
@@ -25,12 +26,46 @@ const DEFAULTS = Object.freeze({
 });
 
 const DEFAULT_FPS = 60;
+const JSON_FILE_PATH = "data/av-data.json";
+
+const loadJSON = () => {
+    fetch(JSON_FILE_PATH)
+        .then(response => {
+            return response.json();
+        })
+        .then(data => {
+            // setup title
+            const pageTitle = document.querySelector("title");
+            const titleElement = document.querySelector("#title");
+            pageTitle.innerHTML = data.title;
+            titleElement.innerHTML = data.title;
+
+            // setup options
+            const trackSelect = document.querySelector("#track-select");
+            const tracks = data.audio_files;
+            const options = tracks
+                .map(track => `<option value="${track.filepath}">${track.metadata.title}</option>`)
+                .join("\n");
+            trackSelect.innerHTML = options;
+
+            // setup instructions
+            const instructionsElement = document.querySelector("#instructions");
+            instructionsElement.innerHTML = data.instructions;
+        })
+        .catch(error => {
+            console.log(`Warning, error occurred: ${error}`);
+            return null;
+        })
+};
 
 const init = () => {
     audio.setupWebAudio(DEFAULTS.sound1);
 
     console.log("init called");
-    console.log(`Testing utils.getRandomColor() import: ${utils.getRandomColor()}`);
+
+    // load items from JSON
+    loadJSON();
+
     let canvasElement = document.querySelector("canvas"); // hookup <canvas> element
     setupUI(canvasElement);
 
@@ -113,6 +148,19 @@ const setupUI = (canvasElement) => {
 
     // initial value
     panSlider.dispatchEvent(new Event("input"));
+
+    let coilSlider = document.querySelector("#coil-slider");
+    let coilLabel = document.querySelector("#coil-label");
+
+    coilSlider.oninput = e => {
+        // set pan
+        drawParams.coilCenter = e.target.value;
+        // update label
+        coilLabel.innerHTML = e.target.value;
+    };
+
+    // initial value
+    coilSlider.dispatchEvent(new Event("input"));
 
     // D - hookup track <select>
     let trackSelect = document.querySelector("#track-select");
