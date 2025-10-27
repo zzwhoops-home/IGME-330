@@ -15,8 +15,8 @@ let ctx, ctxBG, canvasWidth, canvasHeight, gradient, analyserNode, audioData;
 
 let teslaSprites = [];
 
-const TESLA_COLORS = ["#80ff2cff", "#e99c49ff"];
-const CIRCLE_COLORS = ["#3a63a6ff", "#5842b8ff", "#28795bff"];
+const TESLA_COLORS = ["rgba(128, 255, 44, 1)", "rgba(233, 156, 73, 1)"];
+const CIRCLE_COLORS = ["rgba(58, 99, 166, 1)", "rgba(88, 66, 184, 1)", "rgba(40, 121, 91, 1)"];
 
 let circles = [];
 const NUM_CIRCLES = 20;
@@ -71,8 +71,8 @@ const setupCanvas = (canvasElement, analyserNodeRef) => {
 
         const x = utils.getRandom(radius, canvasWidth - radius);
         const y = utils.getRandom(radius, canvasHeight - radius);
-        const dx = utils.getRandom(-canvasWidth / 3000, canvasWidth / 3000);
-        const dy = utils.getRandom(-canvasHeight / 3000, canvasHeight / 3000);
+        const dx = utils.getRandom(-canvasWidth / 1000, canvasWidth / 1000);
+        const dy = utils.getRandom(-canvasHeight / 1000, canvasHeight / 1000);
 
         circles.push(new BGCircle(
             {
@@ -108,14 +108,16 @@ const draw = (params = {}) => {
     teslaSprites[1].dataStart = middle;
 
     // 2 - draw background
-    // ctx.save();
-    // ctx.fillStyle = "black";
-    // ctx.globalAlpha = 0.1;
-    // ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-    // ctx.restore();
+    ctx.save();
+    ctx.globalAlpha = 0.1;
+    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+    ctx.restore();
 
     // 3 - draw gradient
     if (params.showGradient) {
+        ctxBG.fillStyle = "#4b2386ff";
+        ctxBG.fillRect(0, 0, canvasWidth, canvasHeight);
+
         circles.forEach(circle => {
             circle.update();
             circle.draw(ctxBG);
@@ -139,7 +141,7 @@ const draw = (params = {}) => {
 
         const middleIndex = middle * audioData.length;
 
-        // update tesla coil x and y
+        // update tesla coil x
         const spriteOneX = margin + middleIndex * (barWidth + barSpacing) / 2;
         const spriteTwoX = canvasWidth - (canvasWidth - (spriteOneX * 2)) / 2;
 
@@ -147,12 +149,13 @@ const draw = (params = {}) => {
         teslaSprites[1].updateX(spriteTwoX);
 
         ctx.save();
-        ctx.strokeStyle = 'rgba(0, 0, 0, 0.50)';
+        ctx.globalAlpha = 0.5;
+
         // loop through the data and draw
         audioData.forEach((element, i) => {
             ctx.fillStyle = i < middleIndex ? TESLA_COLORS[0] : TESLA_COLORS[1];
-            ctx.fillRect(margin + i * (barWidth + barSpacing), topSpacing + 256 - element, barWidth, barHeight);
-            ctx.strokeRect(margin + i * (barWidth + barSpacing), topSpacing + 256 - element, barWidth, barHeight);
+
+            ctx.fillRect(margin + i * (barWidth + barSpacing), canvasHeight / 2 - (element / 2), barWidth, element);
         });
         ctx.restore();
     }
@@ -169,14 +172,14 @@ const draw = (params = {}) => {
             // red-ish circles
             let circleRadius = percent * maxRadius;
             ctx.beginPath();
-            ctx.fillStyle = utils.makeColor(255, 111, 111, 0.34 - percent / 3.0);
+            ctx.fillStyle = utils.makeColor(58, 99, 166, 0.34 - percent / 3.0);
             ctx.arc(canvasWidth / 2, canvasHeight / 2, circleRadius, 0, 2 * Math.PI, false);
             ctx.fill();
             ctx.closePath();
 
             // blue-ish circles, bigger, more transparent
             ctx.beginPath();
-            ctx.fillStyle = utils.makeColor(0, 0, 255, 0.1 - percent / 10.0);
+            ctx.fillStyle = utils.makeColor(88, 66, 184, 0.1 - percent / 10.0);
             ctx.arc(canvasWidth / 2, canvasHeight / 2, circleRadius * 1.5, 0, 2 * Math.PI, false);
             ctx.fill();
             ctx.closePath();
@@ -184,7 +187,7 @@ const draw = (params = {}) => {
             // yellow-ish circles, smaller
             ctx.save();
             ctx.beginPath();
-            ctx.fillStyle = utils.makeColor(200, 200, 0, 0.5 - percent / 5.0);
+            ctx.fillStyle = utils.makeColor(40, 121, 91, 0.5 - percent / 5.0);
             ctx.arc(canvasWidth / 2, canvasHeight / 2, circleRadius * 0.5, 0, 2 * Math.PI, false);
             ctx.fill();
             ctx.closePath();

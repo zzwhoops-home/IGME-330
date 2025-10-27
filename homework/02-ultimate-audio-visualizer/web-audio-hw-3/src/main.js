@@ -66,7 +66,7 @@ const init = () => {
     // load items from JSON
     loadJSON();
 
-    let canvasElement = document.querySelector("canvas"); // hookup <canvas> element
+    let canvasElement = document.querySelector("#fg-canvas"); // hookup <canvas> element
     setupUI(canvasElement);
 
     canvas.setupCanvas(canvasElement, audio.analyserNode);
