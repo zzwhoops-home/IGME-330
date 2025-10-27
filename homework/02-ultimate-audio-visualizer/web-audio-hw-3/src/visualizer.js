@@ -14,6 +14,8 @@ let ctx, canvasWidth, canvasHeight, gradient, analyserNode, audioData;
 
 let teslaSprites = [];
 
+const TESLA_COLORS = ["#80ff2cff", "#e99c49ff"];
+
 const setupCanvas = (canvasElement, analyserNodeRef) => {
     // create drawing context
     ctx = canvasElement.getContext("2d");
@@ -31,7 +33,7 @@ const setupCanvas = (canvasElement, analyserNodeRef) => {
         new TeslaSprite({
             x: 200,
             y: 200,
-            color: "#80ff2cff",
+            color: TESLA_COLORS[0],
             radius: 200,
             radiusVariance: 100,
             arcs: 10,
@@ -44,7 +46,7 @@ const setupCanvas = (canvasElement, analyserNodeRef) => {
         new TeslaSprite({
             x: 600,
             y: 200,
-            color: "#e99c49ff",
+            color: TESLA_COLORS[1],
             radius: 200,
             radiusVariance: 100,
             arcs: 10,
@@ -100,11 +102,20 @@ const draw = (params = {}) => {
         let barHeight = 200;
         let topSpacing = 100;
 
+        const middleIndex = middle * audioData.length;
+
+        // update tesla coil x and y
+        const spriteOneX = margin + middleIndex * (barWidth + barSpacing) / 2;
+        const spriteTwoX = canvasWidth - (canvasWidth - (spriteOneX * 2)) / 2;
+
+        teslaSprites[0].updateX(spriteOneX);
+        teslaSprites[1].updateX(spriteTwoX);
+
         ctx.save();
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.50)';
         ctx.strokeStyle = 'rgba(0, 0, 0, 0.50)';
         // loop through the data and draw
         audioData.forEach((element, i) => {
+            ctx.fillStyle = i < middleIndex ? TESLA_COLORS[0] : TESLA_COLORS[1];
             ctx.fillRect(margin + i * (barWidth + barSpacing), topSpacing + 256 - element, barWidth, barHeight);
             ctx.strokeRect(margin + i * (barWidth + barSpacing), topSpacing + 256 - element, barWidth, barHeight);
         });
