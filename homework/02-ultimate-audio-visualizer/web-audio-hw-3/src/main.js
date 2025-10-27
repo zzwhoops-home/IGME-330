@@ -67,21 +67,22 @@ const init = () => {
     loadJSON();
 
     let canvasElement = document.querySelector("#fg-canvas"); // hookup <canvas> element
-    setupUI(canvasElement);
+    let canvasDiv = document.querySelector("#canvas");
+    setupUI(canvasElement, canvasDiv);
 
     canvas.setupCanvas(canvasElement, audio.analyserNode);
 
     loop();
 }
 
-const setupUI = (canvasElement) => {
+const setupUI = (canvasElement, canvasDiv) => {
     // A - hookup fullscreen button
     const fsButton = document.querySelector("#fs-button");
 
     // add .onclick event to button
     fsButton.onclick = e => {
         console.log("goFullscreen() called");
-        utils.goFullscreen(canvasElement);
+        utils.goFullscreen(canvasDiv);
     };
 
     // B - hookup play button
