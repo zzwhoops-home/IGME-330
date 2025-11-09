@@ -1,0 +1,20 @@
+{
+  "name": "deng-z-hw2-transpiled",
+  "version": "1.0.0",
+  "description": "Transpiled version of HW2 - audio visualizer!",
+  "main": "loader.js",
+  "scripts": {
+    "start": "npm run webpack",
+    "webpack": "webpack --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.28.5",
+    "@babel/preset-env": "^7.28.5",
+    "babel-loader": "^10.0.0",
+    "webpack": "^5.102.1",
+    "webpack-cli": "^6.0.1"
+  }
+}

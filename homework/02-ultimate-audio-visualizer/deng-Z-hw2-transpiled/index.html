@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Audio Visualizer</title>
+    <link href="./styles/default-styles.css" type="text/css" rel="stylesheet" />
+    <!-- <script src="./src/loader.js" type="module"></script> -->
+</head>
+
+<body>
+    <main>
+        <h1 id="title"></h1>
+        <p id="instructions"></p>
+        <div id="canvas">
+            <canvas id="bg-canvas" width="800" height="400"></canvas>
+            <canvas id="fg-canvas" width="800" height="400"></canvas>
+        </div>
+        <div id="controls">
+            <section>
+                <button id="play-button" data-playing="no"></button>
+                <button id="fs-button">Full Screen</button>
+
+                <label>Track:
+                    <select id="track-select">
+                        <option value="media/New Adventure Theme.mp3" selected>New Adventure Theme</option>
+                        <option value="media/Peanuts Theme.mp3">Peanuts Theme</option>
+                        <option value="media/The Picard Song.mp3">The Picard Song</option>
+                    </select>
+                </label>
+            </section>
+
+            <section>
+                Volume: <input type="range" id="volume-slider" min="0" max="2" value="1" step="0.01">
+                <span id="volume-label">???</span>
+
+                Stereo Pan: <input type="range" id="pan-slider" min="-1" max="1" value="0" step="0.01">
+                <span id="pan-label">???</span>
+
+                Distortion: <input type="range" id="distortion-slider" min="0" max="100" value="0" step="1">
+                <span id="distortion-label">???</span>
+            </section>
+
+            <section>
+                Coil Ranges: <input type="range" id="coil-slider" min="0.01" max="0.99" value="0.5" step="0.01">
+                <span id="coil-label">???</span>
+            </section>
+        </div>
+        <section>
+            <span><input type="checkbox" id="gradient-cb"><label for="gradient-cb">Show BG</label></span>
+            <span><input type="checkbox" id="bars-cb"><label for="bars-cb">Show Bars</label></span>
+            <span><input type="checkbox" id="circles-cb"><label for="circles-cb">Show Circles</label></span>
+            <span><input type="checkbox" id="tesla-cb"><label for="tesla-cb">Show Tesla Coils</label></span>
+        </section>
+        <section>
+            <span><input type="checkbox" id="domain-type-cb">Use time domain data</span>
+        </section>
+    </main>
+
+    <footer>
+        <a href="documentation.html">Click here for documentation!</a>
+    </footer>
+
+    <!-- Bundled and transpiled JS file -->
+    <script src="./dist/bundle.js"></script>
+</body>
+
+</html>
