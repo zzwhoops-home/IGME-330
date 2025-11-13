@@ -8,8 +8,8 @@ const add = (a: number, b: number) : number | string => {
     return a + b;
 };
 
-let result = add(2, 1);
-console.log(result);
+// let result = add(2, 1);
+// console.log(result);
 
 // option 1
 type Person = {
