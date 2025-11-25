@@ -1,9 +1,14 @@
 // 1 - our WebAudio context, **we will export and make this public at the bottom of the file**
-let audioCtx;
+let audioCtx: AudioContext;
 
 // **These are "private" properties - these will NOT be visible outside of this module (i.e. file)**
 // 2 - WebAudio nodes that are part of our WebAudio audio routing graph
-let element, sourceNode, analyserNode, gainNode, waveShaperNode, stereoPannerNode;
+let element: HTMLAudioElement;
+let sourceNode: MediaElementAudioSourceNode;
+let analyserNode: AnalyserNode;
+let gainNode: GainNode;
+let waveShaperNode: WaveShaperNode;
+let stereoPannerNode: StereoPannerNode;
 
 // 3 - here we are faking an enumeration
 const DEFAULTS = Object.freeze({
@@ -19,7 +24,7 @@ let audioData = new Uint8Array(DEFAULTS.numSamples / 2);
 
 // sigmoid distortion curve sourced from
 // https://developer.mozilla.org/en-US/docs/Web/API/BaseAudioContext/createWaveShaper
-const makeDistortionCurve = (amount) => {
+const makeDistortionCurve = (amount: Number) => {
     const k = typeof amount === "number" ? amount : 50;
     const n_samples = 44100;
     const curve = new Float32Array(n_samples);
@@ -33,9 +38,8 @@ const makeDistortionCurve = (amount) => {
 }
 
 // **Next are "public" methods - we are going to export all of these at the bottom of this file**
-const setupWebAudio = (filePath) => {
-    // 1 - The || is because WebAudio has not been standardized across browsers yet
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
+const setupWebAudio = (filePath: string) => {
+    const AudioContext = window.AudioContext;
     audioCtx = new AudioContext();
 
     // 2 - this creates an <audio> element
@@ -84,7 +88,7 @@ const setupWebAudio = (filePath) => {
         .connect(audioCtx.destination);
 };
 
-const loadSoundFile = (filePath) => {
+const loadSoundFile = (filePath: string) => {
     element.src = filePath;
 };
 
@@ -96,19 +100,17 @@ const pauseCurrentSound = () => {
     element.pause();
 };
 
-const setVolume = (value) => {
-    value = +value; // make sure that it's a Number rather than a String
+const setVolume = (value: number) => {
+    // value = +value; // we don't need this conversion anymore
     gainNode.gain.value = value;
 };
 
-const setDistortion = (value) => {
-    value = +value;
+const setDistortion = (value: number) => {
     const curve = makeDistortionCurve(value);
     waveShaperNode.curve = curve;
 }
 
-const setPan = (value) => {
-    value = +value;
+const setPan = (value: number) => {
     stereoPannerNode.pan.value = value;
 }
 
