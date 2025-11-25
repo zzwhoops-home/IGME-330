@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HW 2 documentation</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            width: 960px;
+            margin: 0 auto;
+            color: white;
+            background-color: #160a4e;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        a {
+            color: #7acaff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: #5cffff;
+            text-decoration: underline;
+        }
+
+        main {
+            margin: 2rem;
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <header>
+            <h1>Homework 2 - Ultimate Audio Visualizer Docs</h1>
+            <p>Zachary Deng - Fall 2025</p>
+        </header>
+
+        <section>
+            <h2>I. 2 Audio Effect nodes</h2>
+            <p>I added a <code>StereoPannerNode</code> and a <code>WaveShaperNode</code>, which I read online can do
+                panning left and right and apply a distortion effect, respectively. Both are additional sliders, with
+                the
+                panner going between [-1, 1] and the WaveShaper having a custom <code>makeDistortionCurve(amount)</code>
+                function which I found on <a
+                    href="https://developer.mozilla.org/en-US/docs/Web/API/StereoPannerNode/StereoPannerNode">mdn</a>.
+                All I
+                know is that this creates an array of floats which tell the <code>WaveShaperNode</code> how to alter the
+                waveform, which in this case produces a distortion effect.</p>
+        </section>
+
+        <section>
+            <h2>II. Sprite</h2>
+            <p>My <code>TeslaSprite</code> class is located within <code>src/tesla-sprite.js</code>, and I made an
+                animation
+                that
+                should be reminiscent of a Tesla coil. While it does not arc to anything on screen, there are several
+                things
+                which are affected by the average volume. The average volume is determined by two parameters,
+                <code>dataStart</code> and <code>dataEnd</code>. The <code>audioData</code> is sliced between these
+                values,
+                0 being the beginning of the data and 1 being the end, and its values are averaged. These attributes of
+                the
+                "Tesla coil" are affected:
+            </p>
+            <ul>
+                <li>Radius of arcs - how far the arcs travel, affected by volume</li>
+                <li>Radius variance - how much the arc travel distance varies, affected by volume</li>
+                <li>Number of arcs, affected by volume</li>
+                <li>Segment jitter - how jagged the lightning is, affected by # of data points </li>
+                <li>y-distance - this will act as if it is "traveling" with the rectangles behind</li>
+                <li>Alpha value of lines - a smaller value will make the lines fade out more</li>
+            </ul>
+            <p>By default, I have placed two coils, one on each side. The left coil corresponds to the lower frequencies
+                between 0 and 0.5, and the right coil corresponds to the higher frequencies between 0.5 and 1.0.
+                However, if
+                you use the "Coil Slider", you can change the data range that is averaged.</p>
+        </section>
+
+        <section>
+            <h2>III. JSON app data</h2>
+            <p>I added three things in my JSON:</p>
+            <ul>
+                <li>The title of the page</li>
+                <li>A brief introduction and instructions on how to use the page</li>
+                <li>Filepaths and metadata for each song; 'metadata' includes just the title</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>IV. Aesthetic improvements</h2>
+            <p>Here are some of the aesthetic improvements I tried to make.</p>
+            <ul>
+                <li>Background gradient has been changed to a custom canvas blur/lava lamp effect with circles</li>
+                <li>Changed the circle to match the background colors</li>
+                <li>Tesla coils!!</li>
+                <li>Location of Tesla coils move according to wherever the "center" of their data section is</li>
+                <li>Added Bezier curves</li>
+                <li>Some CSS styling to center everything and darken the background to fit the theme</li>
+                <li>Removed the box shadow so it feels "seamless"</li>
+                <li>Reduced opacity of bars in visualizer so it's not as jarring, also removed the stroke</li>
+                <li>Full screen doesn't work as well as I'd like but not sure how I might fix that</li>
+            </ul>
+            <h3>Self-grade</h3>
+            <p>I would give myself a good 12-15% for this section because I really did transform almost every aspect of
+                the project and got creative with a Tesla coil concept. I also used Quadratic Bezier curves instead of
+                the rectangles for the "show bars" section.</p>
+        </section>
+    </main>
+</body>
+
+</html>

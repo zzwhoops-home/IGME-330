@@ -1,0 +1,85 @@
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: #141965;
+    font-family: tahoma, verdana, sans serif;
+}
+
+main {
+    width: 960px;
+    padding: 2rem;
+    background: #ddd;
+}
+
+#canvas {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+canvas {
+    margin: 0 1rem 1.5rem 1rem;
+}
+
+#bg-canvas {
+    position: absolute;
+    z-index: 0;
+    box-shadow: 0px 0px 8px 8px rgba(255, 255, 255, 0.5);
+    background: #4b2386ff;
+    filter: blur(30px);
+}
+
+#fg-canvas {
+    background: transparent;
+    z-index: 1;
+}
+
+footer {
+    margin: 1rem;
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+a {
+    color: #7acaff;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #5cffff;
+    text-decoration: underline;
+}
+
+#controls {
+    margin-left: 1rem;
+}
+
+#volume-label {
+    margin-left: 1rem;
+}
+
+section {
+    margin-bottom: 1rem;
+    display: flex;
+    gap: 10px;
+}
+
+#play-button {
+    font-size: 1.2rem;
+    width: 6rem;
+}
+
+button[data-playing="yes"]:after {
+    content: "Pause";
+}
+
+button[data-playing="no"]:after {
+    content: "Play";
+}
+
+#fs-button {
+    font-size: 1.2rem;
+    width: 8rem;
+}
