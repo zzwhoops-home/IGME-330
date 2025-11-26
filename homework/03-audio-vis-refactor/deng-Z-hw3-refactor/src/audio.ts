@@ -100,18 +100,20 @@ const pauseCurrentSound = () => {
     element.pause();
 };
 
-const setVolume = (value: number) => {
-    // value = +value; // we don't need this conversion anymore
-    gainNode.gain.value = value;
+const setVolume = (value: string) => {
+    const numValue: number = Number(value);
+    gainNode.gain.value = numValue;
 };
 
-const setDistortion = (value: number) => {
-    const curve = makeDistortionCurve(value);
+const setDistortion = (value: string) => {
+    const numValue: number = Number(value);
+    const curve = makeDistortionCurve(numValue);
     waveShaperNode.curve = curve;
 }
 
-const setPan = (value: number) => {
-    stereoPannerNode.pan.value = value;
+const setPan = (value: string) => {
+    const numValue: number = Number(value);
+    stereoPannerNode.pan.value = numValue;
 }
 
 export { audioCtx, setupWebAudio, playCurrentSound, pauseCurrentSound, loadSoundFile, setVolume, setDistortion, setPan, analyserNode };

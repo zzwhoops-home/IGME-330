@@ -7,11 +7,30 @@
       - maybe a better name for this file/module would be *visualizer.js* ?
 */
 
-import * as utils from './utils.js';
-import { TeslaSprite } from './tesla-sprite.js';
-import { BGCircle } from './bg-circle.js'
+import * as utils from './utils';
+import { TeslaSprite } from './tesla-sprite';
+import { BGCircle } from './bg-circle'
 
-let ctx, ctxBG, canvasWidth, canvasHeight, analyserNode, audioData;
+let ctx: CanvasRenderingContext2D;
+let ctxBG: CanvasRenderingContext2D;
+let canvasWidth: number;
+let canvasHeight: number;
+let analyserNode: AnalyserNode;
+let audioData: Uint8Array<ArrayBuffer>;
+
+type DrawParams = {
+    showGradient: boolean,
+    showBars: boolean,
+    showCircles: boolean,
+    showTeslas: boolean,
+    timeDomain: boolean,
+    coilCenter: number
+}
+
+type GradientEntry = {
+    percent: number,
+    color: string
+}
 
 let teslaSprites = [];
 
@@ -19,7 +38,7 @@ const TESLA_COLORS = ["rgba(144, 255, 70, 1)", "rgba(255, 171, 81, 1)"];
 const CIRCLE_COLORS = ["rgba(58, 99, 166, 1)", "rgba(88, 66, 184, 1)", "rgba(40, 121, 91, 1)"];
 
 let circles = [];
-const NUM_CIRCLES = 20;
+const NUM_CIRCLES: number = 20;
 
 const setupCanvas = (canvasElement, analyserNodeRef) => {
     // create drawing context
@@ -32,7 +51,7 @@ const setupCanvas = (canvasElement, analyserNodeRef) => {
     audioData = new Uint8Array(analyserNode.fftSize / 2);
 
     // get drawing context for BG
-    ctxBG = document.querySelector("#bg-canvas").getContext("2d");
+    ctxBG = (document.querySelector("#bg-canvas") as HTMLCanvasElement).getContext("2d");
 
     // create tesla sprites
     teslaSprites.push(
@@ -87,7 +106,7 @@ const setupCanvas = (canvasElement, analyserNodeRef) => {
     }
 }
 
-const draw = (params = {}) => {
+const draw = (params: DrawParams) => {
     // 1 - populate the audioData array with the frequency data from the analyserNode
     // notice these arrays are passed "by reference"
 
@@ -211,7 +230,7 @@ const draw = (params = {}) => {
             { percent: +middle - 0.05 < 0.01 ? 0 : +middle - 0.05, color: TESLA_COLORS[0] },
             { percent: +middle + 0.05 > 0.99 ? 0.99 : +middle + 0.05, color: TESLA_COLORS[1] },
             { percent: middle, color: TESLA_COLORS[1] }
-        ], 0);
+        ]);
         ctx.fillStyle = gradient;
         ctx.fill();
 
@@ -263,4 +282,4 @@ const draw = (params = {}) => {
     }
 }
 
-export { setupCanvas, draw };
+export { setupCanvas, draw, DrawParams, GradientEntry };

@@ -7,11 +7,11 @@
 // In this instance, we feel the code is more readable if written this way
 // If you want to re-write these as ES6 arrow functions, to be consistent with the other files, go ahead!
 
-import * as utils from './utils.js';
-import * as audio from './audio.js'
-import * as canvas from './visualizer.js';
+import * as utils from './utils';
+import * as audio from './audio'
+import * as canvas from './visualizer';
 
-const drawParams = {
+const drawParams: canvas.DrawParams = {
     showGradient: true,
     showBars: true,
     showCircles: true,
@@ -77,7 +77,7 @@ const init = () => {
 
 const setupUI = (canvasElement, canvasDiv) => {
     // A - hookup fullscreen button
-    const fsButton = document.querySelector("#fs-button");
+    const fsButton = document.querySelector("#fs-button") as HTMLButtonElement;
 
     // add .onclick event to button
     fsButton.onclick = e => {
@@ -86,7 +86,7 @@ const setupUI = (canvasElement, canvasDiv) => {
     };
 
     // B - hookup play button
-    const playButton = document.querySelector("#play-button");
+    const playButton = document.querySelector("#play-button") as HTMLButtonElement;
 
     playButton.onclick = e => {
         console.log(`audioCtx.state before = ${audio.audioCtx.state}`);
@@ -95,79 +95,96 @@ const setupUI = (canvasElement, canvasDiv) => {
         if (audio.audioCtx.state == "suspended") {
             audio.audioCtx.resume();
         }
+
+        const target = e.target as HTMLButtonElement;
         console.log(`audioCtx.state after = ${audio.audioCtx.state}`);
-        if (e.target.dataset.playing == "no") {
+        if (target.dataset.playing == "no") {
             // if track is currently paused, play it
             audio.playCurrentSound();
-            e.target.dataset.playing = "yes";
+            target.dataset.playing = "yes";
         }
         // if track is playing, pause it
         else {
             audio.pauseCurrentSound();
-            e.target.dataset.playing = "no";
+            target.dataset.playing = "no";
         }
     };
 
     // C - hookup volume slider & label
-    let volumeSlider = document.querySelector("#volume-slider");
-    let volumeLabel = document.querySelector("#volume-label");
+    let volumeSlider = document.querySelector("#volume-slider") as HTMLInputElement;
+    let volumeLabel = document.querySelector("#volume-label") as HTMLLabelElement;
 
     // add .oninput event to slider
     volumeSlider.oninput = e => {
+        const target = e.target as HTMLInputElement;
+
         //set the gain
-        audio.setVolume(e.target.value);
+        audio.setVolume(target.value);
+
+        const numValue = Number(target.value);
         // update value of label to match value of slider
-        volumeLabel.innerHTML = Math.round((e.target.value / 2 * 100));
+        volumeLabel.innerHTML = String(Math.round((numValue / 2 * 100)));
     };
 
     // set value of label to match initial value of slider
     volumeSlider.dispatchEvent(new Event("input"));
 
     // setup sliders for distortion and pan
-    let distortionSlider = document.querySelector("#distortion-slider");
-    let distortionLabel = document.querySelector("#distortion-label");
+    let distortionSlider = document.querySelector("#distortion-slider") as HTMLInputElement;
+    let distortionLabel = document.querySelector("#distortion-label") as HTMLLabelElement;
 
     distortionSlider.oninput = e => {
+        const target = e.target as HTMLInputElement;
+
         // set distortion
-        audio.setDistortion(e.target.value);
+        audio.setDistortion(target.value);
+
+        const numValue = Number(target.value);
         // update label
-        distortionLabel.innerHTML = Math.round(e.target.value);
+        distortionLabel.innerHTML = String(Math.round(numValue));
     };
 
     // initial value
     distortionSlider.dispatchEvent(new Event("input"));
 
-    let panSlider = document.querySelector("#pan-slider");
-    let panLabel = document.querySelector("#pan-label");
+    let panSlider = document.querySelector("#pan-slider") as HTMLInputElement;
+    let panLabel = document.querySelector("#pan-label") as HTMLLabelElement;
 
     panSlider.oninput = e => {
+        const target = e.target as HTMLInputElement;
+
         // set pan
-        audio.setPan(e.target.value);
+        audio.setPan(target.value);
+
         // update label
-        panLabel.innerHTML = e.target.value;
+        panLabel.innerHTML = target.value;
     };
 
     // initial value
     panSlider.dispatchEvent(new Event("input"));
 
-    let coilSlider = document.querySelector("#coil-slider");
-    let coilLabel = document.querySelector("#coil-label");
+    let coilSlider = document.querySelector("#coil-slider") as HTMLInputElement;
+    let coilLabel = document.querySelector("#coil-label") as HTMLLabelElement;
 
     coilSlider.oninput = e => {
+        const target = e.target as HTMLInputElement;
+
         // set pan
-        drawParams.coilCenter = e.target.value;
+        drawParams.coilCenter = Number(target.value);
         // update label
-        coilLabel.innerHTML = e.target.value;
+        coilLabel.innerHTML = target.value;
     };
 
     // initial value
     coilSlider.dispatchEvent(new Event("input"));
 
     // D - hookup track <select>
-    let trackSelect = document.querySelector("#track-select");
+    let trackSelect = document.querySelector("#track-select") as HTMLSelectElement;
     // add .onchange event to <select>
     trackSelect.onchange = e => {
-        audio.loadSoundFile(e.target.value);
+        const target = e.target as HTMLSelectElement;
+
+        audio.loadSoundFile(target.value);
         // pause the current track if it is playing
         if (playButton.dataset.playButton == "yes") {
             playButton.dispatchEvent(new MouseEvent("click"));
@@ -175,11 +192,11 @@ const setupUI = (canvasElement, canvasDiv) => {
     };
 
     // E - setup and hookup checkboxes
-    const gradientCB = document.querySelector("#gradient-cb");
-    const barsCB = document.querySelector("#bars-cb");
-    const circlesCB = document.querySelector("#circles-cb");
-    const teslaCB = document.querySelector("#tesla-cb");
-    const domainCB = document.querySelector("#domain-type-cb");
+    const gradientCB = document.querySelector("#gradient-cb") as HTMLInputElement;
+    const barsCB = document.querySelector("#bars-cb") as HTMLInputElement;
+    const circlesCB = document.querySelector("#circles-cb") as HTMLInputElement;
+    const teslaCB = document.querySelector("#tesla-cb") as HTMLInputElement;
+    const domainCB = document.querySelector("#domain-type-cb") as HTMLInputElement;
 
     // everything is checked to start
     gradientCB.checked = drawParams.showGradient;
@@ -211,7 +228,7 @@ const setupUI = (canvasElement, canvasDiv) => {
 
     domainCB.addEventListener("change", (e) => {
         drawParams.timeDomain = !drawParams.timeDomain;
-        domainCB.checkced = drawParams.timeDomain;
+        domainCB.checked = drawParams.timeDomain;
     });
 
 } // end setupUI
