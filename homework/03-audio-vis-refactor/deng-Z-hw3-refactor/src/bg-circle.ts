@@ -16,15 +16,8 @@ class BGCircle {
     canvasWidth: number; canvasHeight: number;
     color: string;
 
-    constructor(params: BGCircleParams) {
-        this.x = params.x;
-        this.y = params.y;
-        this.radius = params.radius;
-        this.dx = params.dx;
-        this.dy = params.dy;
-        this.canvasWidth = params.canvasWidth;
-        this.canvasHeight = params.canvasHeight;
-        this.color = params.color;
+    constructor({ x, y, radius, dx, dy, canvasWidth, canvasHeight, color }: BGCircleParams) {
+        Object.assign(this, { x, y, radius, dx, dy, canvasWidth, canvasHeight, color });
     }
 
     update() {

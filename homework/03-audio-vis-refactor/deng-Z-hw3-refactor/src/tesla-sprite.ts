@@ -22,18 +22,8 @@ class TeslaSprite {
     lineWidth: number;
     dataStart: number; dataEnd: number;
 
-    constructor(params: TeslaParams) {
-        this.x = params.x;
-        this.y = params.y;
-        this.color = params.color;
-        this.radius = params.radius;
-        this.radiusVariance = params.radiusVariance;
-        this.arcs = params.arcs;
-        this.segments = params.segments;
-        this.segmentJitter = params.segmentJitter;
-        this.lineWidth = params.lineWidth;
-        this.dataStart = params.dataStart;
-        this.dataEnd = params.dataEnd;
+    constructor({ x, y, color, radius, radiusVariance, arcs, segments, segmentJitter, lineWidth, dataStart, dataEnd }: TeslaParams) {
+        Object.assign(this, { x, y, color, radius, radiusVariance, arcs, segments, segmentJitter, lineWidth, dataStart, dataEnd });
     }
 
     update(audioData: Uint8Array) {
