@@ -1,4 +1,5 @@
-// 1 - our WebAudio context, **we will export and make this public at the bottom of the file**
+import { AudioDefaults } from "./enums";
+
 let audioCtx: AudioContext;
 
 // **These are "private" properties - these will NOT be visible outside of this module (i.e. file)**
@@ -10,17 +11,9 @@ let gainNode: GainNode;
 let waveShaperNode: WaveShaperNode;
 let stereoPannerNode: StereoPannerNode;
 
-// 3 - here we are faking an enumeration
-const DEFAULTS = Object.freeze({
-    gain: 5,
-    distortion: 0,
-    pan: 0,
-    numSamples: 256
-});
-
 // 4 - create a new array of 8-bit integers (0-255)
 // this is a typed array to hold the audio frequency data
-let audioData = new Uint8Array(DEFAULTS.numSamples / 2);
+let audioData = new Uint8Array(AudioDefaults.NUM_SAMPLES / 2);
 
 // sigmoid distortion curve sourced from
 // https://developer.mozilla.org/en-US/docs/Web/API/BaseAudioContext/createWaveShaper
@@ -56,28 +49,28 @@ const setupWebAudio = (filePath: string) => {
     analyserNode = audioCtx.createAnalyser();
     /*
     // 6
-    We will request DEFAULTS.numSamples number of samples or "bins" spaced equally 
+    We will request AudioDefaults.numSamples number of samples or "bins" spaced equally 
     across the sound spectrum.
     
-    If DEFAULTS.numSamples (fftSize) is 256, then the first bin is 0 Hz, the second is 172 Hz, 
+    If AudioDefaults.numSamples (fftSize) is 256, then the first bin is 0 Hz, the second is 172 Hz, 
     the third is 344Hz, and so on. Each bin contains a number between 0-255 representing 
     the amplitude of that frequency.
     */
 
     // fft stands for Fast Fourier Transform
-    analyserNode.fftSize = DEFAULTS.numSamples;
+    analyserNode.fftSize = AudioDefaults.NUM_SAMPLES;
 
     // 7 - create a gain (volume) node
     gainNode = audioCtx.createGain();
-    gainNode.gain.value = DEFAULTS.gain;
+    gainNode.gain.value = AudioDefaults.GAIN;
 
     // create two effect nodes for distortion & reverb
     waveShaperNode = audioCtx.createWaveShaper();
-    waveShaperNode.curve = makeDistortionCurve(DEFAULTS.distortion);
+    waveShaperNode.curve = makeDistortionCurve(AudioDefaults.DISTORTION);
     waveShaperNode.oversample = "4x";
 
     stereoPannerNode = audioCtx.createStereoPanner();
-    stereoPannerNode.pan.value = DEFAULTS.pan;
+    stereoPannerNode.pan.value = AudioDefaults.PAN;
 
     // 8 - connect the nodes - we now have an audio graph
     sourceNode
