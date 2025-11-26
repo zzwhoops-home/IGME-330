@@ -1,21 +1,42 @@
 import { getRandom } from "./utils.js"
 
+type TeslaParams = {
+    x: number,
+    y: number,
+    color: string
+    radius: number,
+    radiusVariance: number,
+    arcs: number,
+    segments: number,
+    segmentJitter: number,
+    lineWidth: number,
+    dataStart: number,
+    dataEnd: number
+};
+
 class TeslaSprite {
-    constructor({ x, y, color, radius, radiusVariance, arcs, segments, segmentJitter, lineWidth, dataStart, dataEnd }) {
-        this.x = x;
-        this.y = y;
-        this.color = color;
-        this.radius = radius;
-        this.radiusVariance = radiusVariance;
-        this.arcs = arcs;
-        this.segments = segments;
-        this.segmentJitter = segmentJitter;
-        this.lineWidth = lineWidth;
-        this.dataStart = dataStart;
-        this.dataEnd = dataEnd;
+    x: number; y: number;
+    color: string;
+    radius: number; radiusVariance: number;
+    arcs: number; segments: number; segmentJitter: number;
+    lineWidth: number;
+    dataStart: number; dataEnd: number;
+
+    constructor(params: TeslaParams) {
+        this.x = params.x;
+        this.y = params.y;
+        this.color = params.color;
+        this.radius = params.radius;
+        this.radiusVariance = params.radiusVariance;
+        this.arcs = params.arcs;
+        this.segments = params.segments;
+        this.segmentJitter = params.segmentJitter;
+        this.lineWidth = params.lineWidth;
+        this.dataStart = params.dataStart;
+        this.dataEnd = params.dataEnd;
     }
 
-    update(audioData) {
+    update(audioData: Uint8Array) {
         // creates a split of data, then finds the average value from that data to update the lightning
         const length = audioData.length || 0;
         const start = Math.floor(this.dataStart * length);
@@ -31,11 +52,11 @@ class TeslaSprite {
         this.segmentJitter = (1.3 - (this.dataEnd - this.dataStart)) * 8;
     }
 
-    updateX(newX) {
+    updateX(newX: number) {
         this.x = newX;
     }
 
-    draw(ctx) {
+    draw(ctx: CanvasRenderingContext2D) {
         ctx.save();
 
         for (let i = 1; i <= this.arcs; i++) {
@@ -84,7 +105,9 @@ class TeslaSprite {
 }
 
 class Vector2 {
-    constructor(x, y) {
+    x: number; y: number;
+
+    constructor(x: number, y: number) {
         this.x = x;
         this.y = y;
     }
@@ -98,11 +121,11 @@ class Vector2 {
         return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
     }
 
-    scaled(value) {
+    scaled(value: number) {
         return new Vector2(this.x * value, this.y * value);
     }
 
-    addNoise(value) {
+    addNoise(value: number) {
         return new Vector2(this.x + getRandom(-value, value), this.y + getRandom(-value, value));
     }
 }
