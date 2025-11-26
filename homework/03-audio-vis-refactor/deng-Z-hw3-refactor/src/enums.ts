@@ -4,3 +4,7 @@ export enum AudioDefaults {
     PAN = 0,
     NUM_SAMPLES = 256
 };
+
+export enum DefaultSong {
+    sound1 = "media/Blessing Song.mp3"
+}

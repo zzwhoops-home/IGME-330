@@ -10,6 +10,7 @@
 import * as utils from './utils';
 import * as audio from './audio'
 import * as canvas from './visualizer';
+import { DefaultSong } from './enums';
 
 const drawParams: canvas.DrawParams = {
     showGradient: true,
@@ -19,11 +20,6 @@ const drawParams: canvas.DrawParams = {
     timeDomain: false,
     coilCenter: 0.5
 };
-
-// 1 - here we are faking an enumeration
-const DEFAULTS = Object.freeze({
-    sound1: "media/Blessing Song.mp3"
-});
 
 const DEFAULT_FPS = 60;
 const JSON_FILE_PATH = "data/av-data.json";
@@ -59,7 +55,7 @@ const loadJSON = () => {
 };
 
 const init = () => {
-    audio.setupWebAudio(DEFAULTS.sound1);
+    audio.setupWebAudio(DefaultSong.sound1);
 
     console.log("init called");
 
