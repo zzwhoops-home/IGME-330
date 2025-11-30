@@ -57,8 +57,6 @@ const loadJSON = () => {
 const init = () => {
     audio.setupWebAudio(DefaultSong.sound1);
 
-    console.log("init called");
-
     // load items from JSON
     loadJSON();
 
@@ -77,7 +75,6 @@ const setupUI = (canvasElement: HTMLCanvasElement, canvasDiv: HTMLDivElement) =>
 
     // add .onclick event to button
     fsButton.onclick = e => {
-        console.log("goFullscreen() called");
         utils.goFullscreen(canvasDiv);
     };
 
@@ -85,15 +82,12 @@ const setupUI = (canvasElement: HTMLCanvasElement, canvasDiv: HTMLDivElement) =>
     const playButton = document.querySelector("#play-button") as HTMLButtonElement;
 
     playButton.onclick = e => {
-        console.log(`audioCtx.state before = ${audio.audioCtx.state}`);
-
         // check if context is in suspened state (autoplay policy)
         if (audio.audioCtx.state == "suspended") {
             audio.audioCtx.resume();
         }
 
         const target = e.target as HTMLButtonElement;
-        console.log(`audioCtx.state after = ${audio.audioCtx.state}`);
         if (target.dataset.playing == "no") {
             // if track is currently paused, play it
             audio.playCurrentSound();

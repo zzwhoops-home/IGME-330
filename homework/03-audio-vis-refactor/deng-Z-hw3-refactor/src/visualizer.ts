@@ -139,12 +139,6 @@ const draw = (params: DrawParams) => {
             circle.update();
             circle.draw(ctxBG);
         })
-
-        // ctx.save();
-        // ctx.fillStyle = gradient;
-        // ctx.globalAlpha = 0.3;
-        // ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-        // ctx.restore();
     }
 
     // 4 - draw bars

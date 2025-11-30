@@ -17,7 +17,7 @@ let audioData = new Uint8Array(AudioDefaults.NUM_SAMPLES / 2);
 
 // sigmoid distortion curve sourced from
 // https://developer.mozilla.org/en-US/docs/Web/API/BaseAudioContext/createWaveShaper
-const makeDistortionCurve = (amount: Number) => {
+const makeDistortionCurve = (amount: number) => {
     const k = typeof amount === "number" ? amount : 50;
     const n_samples = 44100;
     const curve = new Float32Array(n_samples);

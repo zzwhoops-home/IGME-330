@@ -22,8 +22,15 @@ const getLinearGradient = (ctx: CanvasRenderingContext2D, startX: number, startY
     return lg;
 };
 
+interface FullscreenElement extends Element {
+    requestFullscreen: (options?: FullscreenOptions) => Promise<void>; // required
+    mozRequestFullscreen?: (options?: FullscreenOptions) => Promise<void>;
+    mozRequestFullScreen?: (options?: FullscreenOptions) => Promise<void>;
+    webkitRequestFullscreen?: (options?: FullscreenOptions) => Promise<void>;
+}
+
 // https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API
-const goFullscreen = (element) => {
+const goFullscreen = (element: FullscreenElement) => {
     if (element.requestFullscreen) {
         element.requestFullscreen();
     } else if (element.mozRequestFullscreen) {
