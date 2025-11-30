@@ -103,7 +103,7 @@ class Vector2 {
     }
 
     normalized() {
-        let length = this.length();
+        let length: number = this.length();
         return new Vector2(this.x / length, this.y / length);
     }
 

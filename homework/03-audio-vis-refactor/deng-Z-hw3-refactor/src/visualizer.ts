@@ -40,7 +40,7 @@ const CIRCLE_COLORS = ["rgba(58, 99, 166, 1)", "rgba(88, 66, 184, 1)", "rgba(40,
 let circles = [];
 const NUM_CIRCLES: number = 20;
 
-const setupCanvas = (canvasElement, analyserNodeRef) => {
+const setupCanvas = (canvasElement: HTMLCanvasElement, analyserNodeRef: AnalyserNode) => {
     // create drawing context
     ctx = canvasElement.getContext("2d");
     canvasWidth = canvasElement.width;

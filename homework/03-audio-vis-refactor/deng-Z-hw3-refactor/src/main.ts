@@ -62,8 +62,8 @@ const init = () => {
     // load items from JSON
     loadJSON();
 
-    let canvasElement = document.querySelector("#fg-canvas"); // hookup <canvas> element
-    let canvasDiv = document.querySelector("#canvas");
+    let canvasElement = document.querySelector("#fg-canvas") as HTMLCanvasElement; // hookup <canvas> element
+    let canvasDiv = document.querySelector("#canvas") as HTMLDivElement;
     setupUI(canvasElement, canvasDiv);
 
     canvas.setupCanvas(canvasElement, audio.analyserNode);
@@ -71,7 +71,7 @@ const init = () => {
     loop();
 }
 
-const setupUI = (canvasElement, canvasDiv) => {
+const setupUI = (canvasElement: HTMLCanvasElement, canvasDiv: HTMLDivElement) => {
     // A - hookup fullscreen button
     const fsButton = document.querySelector("#fs-button") as HTMLButtonElement;
 
