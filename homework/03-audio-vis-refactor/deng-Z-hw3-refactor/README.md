@@ -1,0 +1,7 @@
+# Homework 3: TypeScript Refactor
+
+I implemented TypeScript in my project by simply renaming all of the `.js` files to `.ts` and then, after the compiler threw a fit, fixed all the errors. For example, I added a type for the "drawing parameters" and for instantiating the tesla coil objects. I made sure that every global variable that was declared without initialization was assigned a type. When we used `Object.freeze()` last time to "fake an enum", I created an actual enum that could be used to specify the default song. I also used type assertions whenever I queryed elements, knowing that these types can't be immediately inferred from the function call.
+
+I found this assignment to be fairly straightforward, but I think what I ran into was trying to strongly type `goFullscreen()`. I'd guess the element can just be any `Element`, but I just assumed the other functions, like `mozRequestFullscreen` could be commented out. I followed [this StackOverflow question](https://stackoverflow.com/questions/25993861/how-do-i-get-typescript-to-stop-complaining-about-functions-it-doesnt-know-abou) to fix it.
+
+I didn't really make any improvements or optimizations otherwise, other than removing the webkit audio code and removing other console logs and commented-out code that I'd left in for HW2.
