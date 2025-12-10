@@ -1,10 +1,38 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 
-function App() {
+// lowercase doesn't work as a react function
+// const app = () => {
+//   return (
+//     <>
+//       <div></div>
+//       <div></div>
+//     </>
+//   )
+// }
+
+const App = () => {
+  // treat count as a "throwaway" value that can be referenced this refresh
   const [count, setCount] = useState(0)
+
+  const [names, setNames] = useState([]);
+
+  const fetchData = async() => {
+    const result = await fetch("http://");
+    const data = await result.json();
+
+    return data;
+  }
+
+  // so that the network call setting names does not rerender and call fetchData again
+  useEffect(() => {
+    fetchData().then(data => {
+      setNames(data);
+      console.log(names);
+    });
+  }, [/* dependency list*/]); // for react to recognize changes in the dependency list and call what is within the useEffect hook again
 
   return (
     <>
