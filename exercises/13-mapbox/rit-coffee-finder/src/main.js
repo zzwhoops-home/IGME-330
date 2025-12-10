@@ -1,75 +1,89 @@
+import * as map from "./map.js";
+import * as get from "./get.js";
+
+let poi;
+let dataLoading = false;
+
+const loadPOI = () => {
+    const url = "https://people.rit.edu/~acjvks/shared/330/igm-points-of-interest.php";
+
+    // load POIs, prevent race condition
+    if (!dataLoading) {
+        dataLoading = true;
+
+        get.getPOIData(url)
+            .then(data => {
+                poi = data;
+
+                for (let p of poi) {
+                    map.addMarker(p.coordinates, p.title, "A POI!", "poi");
+                }
+
+                dataLoading = false;
+            })
+    }
+};
+
 const init = () => {
-    mapboxgl.accessToken = 'pk.eyJ1Ijoienp3aG9vcHMiLCJhIjoiY21pemdlbjh5MG82cTNrcHBuN3N4OWptNCJ9.CbdV0IviXCiaNmm5yN6LKg';
+    // initialize mapbox
+    map.initMap();
 
-    //code from step 5 will go here
-    const geojson = {
-        type: 'FeatureCollection',
-        features: [
-            {
-                type: 'Feature',
-                geometry: {
-                    type: 'Point',
-                    coordinates: [-77.032, 38.913]
-                },
-                properties: {
-                    title: 'Mapbox',
-                    description: 'Washington, D.C.'
-                }
-            },
-            {
-                type: 'Feature',
-                geometry: {
-                    type: 'Point',
-                    coordinates: [-122.414, 37.776]
-                },
-                properties: {
-                    title: 'Mapbox',
-                    description: 'San Francisco, California'
-                }
-            },
-            {
-                "type": "Feature",
-                "properties": {
-                    "title": "Grand Teton Summit",
-                    "description": "Grand Teton National Park, WY"
-                },
-                "geometry": {
-                    "coordinates": [
-                        -110.80243383290052,
-                        43.7410340457445
-                    ],
-                    "type": "Point"
-                }
-            },
-        ]
-    };
+    // load markers
+    map.loadMarkers();
 
-    const map = new mapboxgl.Map({
-        container: 'map',
-        style: 'mapbox://styles/mapbox/light-v11',
-        center: [-96, 37.8],
-        zoom: 3
+    // add markers
+    map.addMarkersToMap();
+
+    // UI stuff
+    setupUI();
+};
+
+const setupUI = () => {
+    // it's easy to get [longitude,latitude] coordinates with this tool: http://geojson.io/
+    const lnglatRIT = [-77.67454147338866, 43.08484339838443];
+    const lnglatIGM = [-77.67990589141846, 43.08447511795301];
+
+    const btn1 = document.querySelector("#btn1");
+    const btn2 = document.querySelector("#btn2");
+    const btn3 = document.querySelector("#btn3");
+    const btn4 = document.querySelector("#btn4");
+    const btn5 = document.querySelector("#btn5");
+
+    // RIT Zoom 15.5
+    btn1.addEventListener('click', () => {
+        map.setZoomLevel(15.5);
+        map.setPitchAndBearing(0, 0);
+        map.flyTo(lnglatRIT);
     });
 
-    //code from step 6 will go here
-    // add markers to map
-    for (const feature of geojson.features) {
+    // RIT isometric view
+    btn2.addEventListener('click', () => {
+        map.setZoomLevel(15.5);
+        map.setPitchAndBearing(45, 0);
+        map.flyTo(lnglatRIT);
+    });
 
-        // code from step 7-1 will go here
-        const el = document.createElement("div");
-        el.className = "marker";
+    // World zoom 0
+    btn3.addEventListener('click', () => {
+        map.setZoomLevel();
+        map.setPitchAndBearing(0, 0);
+        map.flyTo();
+    });
 
-        //code from step 8 will go here
-        new mapboxgl.Marker(el)
-            .setLngLat(feature.geometry.coordinates)
-            .setPopup(
-                new mapboxgl.Popup({ offset: 25 }) // add popups
-                    .setHTML(
-                        `<h3>${feature.properties.title}</h3><p>${feature.properties.description}</p>`
-                    )
-            )
-            .addTo(map);
-    }
+    // IGM zoom 18
+    btn4.addEventListener('click', () => {
+        map.setZoomLevel(18);
+        map.setPitchAndBearing(0, 0);
+        map.flyTo(lnglatIGM);
+    });
+
+    // load marker data
+    btn5.addEventListener('click', () => {
+        // only download data once
+        if (!poi) {
+            loadPOI();
+        }
+    });
 };
 
 export { init };
