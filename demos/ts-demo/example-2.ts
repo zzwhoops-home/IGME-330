@@ -8,7 +8,7 @@ let myPos: Point = {
     y: 14
 };
 
-const translateByX = (amount: number, point: Point) : Point => {
+const translateByX = (amount: number, point: Point): Point => {
     return {
         x: point.x + amount,
         y: point.y
@@ -29,7 +29,7 @@ type Character = {
     hp: number
 };
 
-const aGuy : Character = {
+const aGuy: Character = {
     name: 'Zach',
     character_class: CharacterClass.Elf,
     hp: 20
@@ -72,7 +72,7 @@ const attack: Attack = {
     point_cost: 1
 };
 
-const processEvent = (evt: CharacterEvents, character: Character) : Character => {
+const processEvent = (evt: CharacterEvents, character: Character): Character => {
     if (evt.kind === 'evt-attack') {
         return {
             name: character.name,
@@ -112,7 +112,7 @@ const processEvent = (evt: CharacterEvents, character: Character) : Character =>
 // } as any as ChangeClass;
 // processEvent(newEvt, aGuy);
 
-let firstHalf = <T>(arr: Array<T>) : Array<T> => {
+let firstHalf = <T>(arr: Array<T>): Array<T> => {
     // return first half of array
     return arr.slice(0, arr.length / 2);
 };
@@ -151,9 +151,9 @@ const x: Alignment = 'top-left';
 type Environment = 'dev' | 'prod';
 type AssetType = 'sprites' | 'audio' | 'fonts';
 type path = `assets/${Environment}/${AssetType}/${string}`;
-const path : path = "assets/dev/sprites/thing.png";
+const path: path = "assets/dev/sprites/thing.png";
 
-const id = <T>(x: T) : T => x;
+const id = <T>(x: T): T => x;
 const id2 = (x) => x;
 
 type Printable = {
